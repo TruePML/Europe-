@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Family Budget Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Syne&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Syne', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .tab {
+            display: flex;
+            justify-content: space-around;
+            background-color: #1e1e1e;
+            padding: 10px 0;
+        }
+        .tab button {
+            background-color: #3f3f3f;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .tab button.active {
+            background-color: #2ecc71;
+        }
+        .budget-info {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Grant Family Budget Tracker</h1>
+    <div class="tab">
+        <button class="active">Current Month</button>
+        <button>Dec 2025</button>
+        <button>Jan 2026</button>
+        <button>Feb 2026</button>
+        <button>Looking Forward</button>
+    </div>
+    <div class="budget-info">
+        <h2>Monthly Summary</h2>
+        <p>Monthly Income: $17,300</p>
+        <p>Fixed Obligations: $10,100</p>
+        <p>Variable Spending: $6,745</p>
+        <h3>Budget Categories</h3>
+        <ul>
+            <li>Housing: $3,000</li>
+            <li>Utilities: $500</li>
+            <li>Groceries: $1,200</li>
+            <li>Transportation: $800</li>
+            <li>Entertainment: $500</li>
+            <li>Education: $1,500</li>
+        </ul>
+    </div>
+</body>
+</html>
