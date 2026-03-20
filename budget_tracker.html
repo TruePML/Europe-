@@ -1,1 +1,448 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Grant Family Budget</title><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet"><style>*,{*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--bg:#0a0a09;--bg2:#161614;--bg3:#1e1e1c;--border:#2a2a26;--border2:rgba(255,255,255,0.14);--text:#f0f0ea;--text2:#c8c8c0;--text3:#8a9ab0;--green:#1a9e60;--green-hi:#3dd68c;--red:#d94040;--amber:#e09020;--blue:#4a9ef5;--purple:#9b6ef5;}body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);padding:2rem 1.5rem 5rem;max-width:960px;margin:0 auto;line-height:1.5;}.hdr-title{font-family:'Instrument Serif',serif;font-size:36px;font-weight:400;color:var(--text);letter-spacing:-0.02em;line-height:1.1;margin-bottom:3px;}.hdr-sub{font-size:12px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2rem;}.tabs{display:flex;gap:6px;margin-bottom:2rem;flex-wrap:wrap;}.tab{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;padding:7px 16px;border:1px solid var(--border);border-radius:99px;background:transparent;color:var(--text3);cursor:pointer;letter-spacing:0.04em;transition:all 0.12s;}.tab:hover{color:var(--text2);border-color:#444;}.tab.active{background:var(--text);color:#0a0a09;border-color:var(--text);}.panel{display:none;}.panel.active{display:block;}</style></head><body><div class="hdr-title">Grant Family Budget</div><div class="hdr-sub">Vendor-level actuals · 2025 data + 2026 assumptions · Mar 2026</div><script>function show(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.getElementById('panel-'+id).classList.add('active'); event.target.classList.add('active'); }</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grant Family Budget</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a0a09; --bg2: #161614; --bg3: #1e1e1c;
+  --border: #2a2a26; --border2: rgba(255,255,255,0.14);
+  --text: #f0f0ea; --text2: #c8c8c0; --text3: #8a9ab0;
+  --green: #1a9e60; --green-hi: #3dd68c;
+  --red: #d94040; --amber: #e09020; --blue: #4a9ef5; --purple: #9b6ef5;
+}
+body { font-family:'Syne',sans-serif; background:var(--bg); color:var(--text); padding:2rem 1.5rem 5rem; max-width:960px; margin:0 auto; line-height:1.5; }
+
+/* HEADER */
+.hdr-title { font-family:'Instrument Serif',serif; font-size:36px; font-weight:400; color:var(--text); letter-spacing:-0.02em; line-height:1.1; margin-bottom:3px; }
+.hdr-sub { font-size:12px; color:var(--text3); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:2rem; }
+
+/* TABS */
+.tabs { display:flex; gap:6px; margin-bottom:2rem; flex-wrap:wrap; }
+.tab { font-family:'Syne',sans-serif; font-size:11px; font-weight:600; padding:7px 16px; border:1px solid var(--border); border-radius:99px; background:transparent; color:var(--text3); cursor:pointer; letter-spacing:0.04em; transition:all 0.12s; }
+.tab:hover { color:var(--text2); border-color:#444; }
+.tab.active { background:var(--text); color:#0a0a09; border-color:var(--text); }
+.panel { display:none; }
+.panel.active { display:block; }
+
+/* SUMMARY CARDS */
+.sg { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:1.75rem; }
+.sc { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:1rem; position:relative; overflow:hidden; }
+.sc::after { content:''; position:absolute; top:0;left:0;right:0; height:3px; }
+.sc.income::after { background:var(--green-hi); }
+.sc.needs::after  { background:var(--blue); }
+.sc.wants::after  { background:var(--amber); }
+.sc.debt::after   { background:var(--purple); }
+.sc.net::after    { background:var(--border2); }
+.sc-label { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:5px; font-weight:600; }
+.sc-val { font-family:'Instrument Serif',serif; font-size:26px; line-height:1; }
+.sc-val.g { color:var(--green-hi); } .sc-val.r { color:var(--red); } .sc-val.b { color:var(--blue); } .sc-val.a { color:var(--amber); } .sc-val.p { color:var(--purple); }
+.sc-sub { font-size:11px; color:var(--text3); margin-top:4px; }
+
+/* 50/30/20 */
+.ratio-wrap { margin-bottom:1.75rem; }
+.ratio-title { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:10px; font-weight:600; }
+.rr { display:flex; align-items:center; gap:10px; margin:7px 0; }
+.rr-label { font-size:13px; color:var(--text2); min-width:190px; }
+.rr-track { flex:1; height:6px; background:var(--bg3); border-radius:99px; position:relative; }
+.rr-fill { height:6px; border-radius:99px; }
+.rr-fill.blue { background:var(--blue); } .rr-fill.amber { background:var(--amber); } .rr-fill.purple { background:var(--purple); }
+.rr-target { position:absolute; top:-3px; height:12px; width:1px; background:rgba(255,255,255,0.2); }
+.rr-num { font-size:12px; min-width:120px; text-align:right; font-weight:600; }
+.rr-num.ok { color:var(--green-hi); } .rr-num.over { color:var(--red); }
+
+/* SECTION HEADERS */
+.sh { display:flex; align-items:center; padding:11px 14px; background:var(--bg2); border:1px solid var(--border); border-radius:10px 10px 0 0; cursor:pointer; user-select:none; margin-top:6px; }
+.sh.income { border-left:3px solid var(--green-hi); }
+.sh.needs  { border-left:3px solid var(--blue); }
+.sh.wants  { border-left:3px solid var(--amber); }
+.sh.debt   { border-left:3px solid var(--purple); }
+.sh-toggle { font-size:11px; color:var(--text3); min-width:16px; margin-right:8px; }
+.sh-name { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; flex:1; }
+.sh-name.income { color:var(--green-hi); } .sh-name.needs { color:var(--blue); } .sh-name.wants { color:var(--amber); } .sh-name.debt { color:var(--purple); }
+.sh-total { font-family:'Instrument Serif',serif; font-size:18px; font-weight:400; }
+.sh-total.income { color:var(--green-hi); } .sh-total.needs { color:var(--blue); } .sh-total.wants { color:var(--amber); } .sh-total.debt { color:var(--purple); }
+
+/* LINE ITEMS */
+.sb { overflow:hidden; }
+.sb.collapsed { max-height:0 !important; }
+.bl { display:flex; align-items:flex-start; padding:9px 14px 9px 38px; border-bottom:1px solid var(--border); border-left:1px solid var(--border); border-right:1px solid var(--border); background:var(--bg); gap:8px; }
+.bl:last-child { border-radius:0 0 10px 10px; }
+.bl-name { flex:1; font-size:13px; color:var(--text2); line-height:1.4; }
+.bl-note { font-size:12px; color:var(--text3); margin-top:2px; }
+.bl-cat { font-size:10px; padding:2px 8px; border-radius:99px; font-family:'Syne',sans-serif; font-weight:600; white-space:nowrap; align-self:flex-start; margin-top:2px; letter-spacing:0.03em; }
+.cat-f { background:rgba(74,158,245,0.12); color:#6ab4ff; }
+.cat-v { background:rgba(224,144,32,0.12); color:#e8a840; }
+.cat-w { background:rgba(155,155,155,0.1); color:#b0b0a8; }
+.cat-d { background:rgba(155,110,245,0.12); color:#b89ef5; }
+.bl-bar { min-width:70px; align-self:center; }
+.bb { height:3px; border-radius:99px; }
+.bb.i { background:var(--green); } .bb.n { background:rgba(74,158,245,0.35); } .bb.w { background:rgba(224,144,32,0.35); } .bb.d { background:rgba(155,110,245,0.35); }
+.bl-amt { font-family:'Instrument Serif',serif; font-size:16px; color:var(--text); min-width:80px; text-align:right; white-space:nowrap; }
+.bl-amt.g { color:var(--green-hi); } .bl-amt.r { color:var(--red); } .bl-amt.a { color:var(--amber); }
+
+/* NET ROW */
+.net-row { display:flex; justify-content:space-between; align-items:flex-start; margin-top:1.75rem; padding:1.5rem; background:var(--bg2); border:1px solid var(--border); border-radius:12px; }
+.net-label { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); font-weight:600; }
+.net-note { font-size:13px; color:var(--text3); margin-top:5px; max-width:480px; line-height:1.6; }
+.net-val { font-family:'Instrument Serif',serif; font-size:52px; letter-spacing:-0.02em; line-height:1; }
+.net-val.pos { color:var(--green-hi); } .net-val.neg { color:var(--red); }
+
+/* CALLOUTS */
+.callout { border-left:2px solid var(--amber); background:rgba(224,144,32,0.06); padding:11px 14px; margin-bottom:10px; font-size:13px; color:var(--text2); line-height:1.6; border-radius:0 8px 8px 0; }
+.callout.green { border-left-color:var(--green-hi); background:rgba(26,158,96,0.06); }
+.callout.red { border-left-color:var(--red); background:rgba(217,64,64,0.06); }
+.callout b { color:var(--amber); }
+.callout.green b { color:var(--green-hi); }
+.callout.red b { color:var(--red); }
+
+/* FORWARD PANEL */
+.fwd-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:1.5rem; }
+.fwd-card { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:1rem; }
+.fwd-card.best { border-color:var(--green); }
+.fwd-period { font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text3); margin-bottom:6px; font-weight:600; }
+.fwd-surplus { font-family:'Instrument Serif',serif; font-size:30px; line-height:1; margin-bottom:4px; }
+.fwd-surplus.pos { color:var(--green-hi); }
+.fwd-detail { font-size:12px; color:var(--text2); line-height:1.5; }
+
+.timeline { margin-top:1rem; }
+.tl-row { display:flex; align-items:flex-start; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.tl-row:last-child { border-bottom:none; }
+.tl-date { font-size:11px; color:var(--text3); min-width:76px; padding-top:1px; font-weight:600; letter-spacing:0.04em; }
+.tl-dot { width:8px; height:8px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+.tl-dot.g { background:var(--green-hi); } .tl-dot.a { background:var(--amber); } .tl-dot.b { background:var(--blue); }
+.tl-content { flex:1; color:var(--text2); line-height:1.5; }
+.tl-amount { font-family:'Instrument Serif',serif; font-weight:400; min-width:90px; text-align:right; font-size:15px; }
+.tl-amount.g { color:var(--green-hi); } .tl-amount.a { color:var(--amber); }
+
+.section-divider { margin:1.5rem 0 1rem; display:flex; align-items:center; gap:10px; }
+.sd-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text3); white-space:nowrap; }
+.sd-line { flex:1; height:0.5px; background:var(--border); }
+
+@media(max-width:620px) { .sg { grid-template-columns:repeat(2,1fr); } .bl-bar { display:none; } .hdr-title { font-size:28px; } .fwd-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="hdr-title">Grant Family Budget</div>
+<div class="hdr-sub">Vendor-level actuals · 2025 data + 2026 assumptions · Mar 2026</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('current')">Current Month</button>
+  <button class="tab" onclick="show('dec')">Dec 2025</button>
+  <button class="tab" onclick="show('jan')">Jan 2026</button>
+  <button class="tab" onclick="show('feb')">Feb 2026</button>
+  <button class="tab" onclick="show('forward')">Looking Forward</button>
+</div>
+
+<!-- ══════════════════════════════════
+     CURRENT / NORMALIZED MONTH
+     ══════════════════════════════════ -->
+<div class="panel active" id="panel-current">
+
+<div class="callout green"><b>How to read this:</b> Everything goes on Chase SW card for points and is paid in full monthly — so spend categories are listed once. The Chase payoff is not a separate line. Only Citi ($381) and US Bank ($1,045) are real debt paydown.</div>
+
+<div class="sg">
+  <div class="sc income"><div class="sc-label">Monthly income</div><div class="sc-val g">$17,300</div><div class="sc-sub">all sources</div></div>
+  <div class="sc needs"><div class="sc-label">Fixed obligations</div><div class="sc-val b">$10,100</div><div class="sc-sub">58% of income</div></div>
+  <div class="sc wants"><div class="sc-label">Variable spending</div><div class="sc-val a">$6,745</div><div class="sc-sub">39% of income</div></div>
+  <div class="sc debt"><div class="sc-label">Real debt paydown</div><div class="sc-val p">$1,426</div><div class="sc-sub">Citi + US Bank only</div></div>
+  <div class="sc net"><div class="sc-val g">+$455</div><div class="sc-label">Monthly surplus</div><div class="sc-sub">grows fast — see Forward tab</div></div>
+</div>
+
+<div class="ratio-wrap">
+  <div class="ratio-title">50 / 30 / 20 — % of $17,300 income</div>
+  <div class="rr"><div class="rr-label">Needs — target ≤50%</div><div class="rr-track"><div class="rr-fill blue" style="width:100%"></div><div class="rr-target" style="left:50%"></div></div><div class="rr-num over">64% · $11,126 — mortgage is the wall</div></div>
+  <div class="rr"><div class="rr-label">Wants — target ≤30%</div><div class="rr-track"><div class="rr-fill amber" style="width:100%"></div><div class="rr-target" style="left:77%"></div></div><div class="rr-num over">39% · $6,745 — dining + travel savings</div></div>
+  <div class="rr"><div class="rr-label">Debt paydown — target 20%</div><div class="rr-track"><div class="rr-fill purple" style="width:41%"></div><div class="rr-target" style="left:100%"></div></div><div class="rr-num ok">8% · $1,426 ✓</div></div>
+</div>
+
+<!-- INCOME -->
+<div class="sh income" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name income">Income</span><span class="sh-total income">+ $17,300 / mo</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">CalPERS pension — Wesley P. Grant<div class="bl-note">→ increases to $5,933 on May 1 (+$116/mo)</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb i" style="width:34%"></div></div><span class="bl-amt g">$5,817</span></div>
+  <div class="bl"><span class="bl-name">Sara salary — CCAH (26 paychecks/yr normalized)<div class="bl-note">$4,000/paycheck × 26 ÷ 12 = $8,667/mo</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb i" style="width:50%"></div></div><span class="bl-amt g">$8,667</span></div>
+  <div class="bl"><span class="bl-name">Airbnb — Casita Cave Creek<div class="bl-note">Annual avg · Jan–Apr and Nov strong · Jul–Aug = $0</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb i" style="width:7%"></div></div><span class="bl-amt g">$1,200</span></div>
+  <div class="bl"><span class="bl-name">Aspen Pines lending — net share<div class="bl-note">$4,000 received · $2,500 to Gretchen Blincoe · $1,500 yours · re-upped ongoing</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb i" style="width:9%"></div></div><span class="bl-amt g">$1,500</span></div>
+  <div class="bl"><span class="bl-name">Bear loan spread income<div class="bl-note">You borrow at 10% · lend same capital at 16% · net 6% spread included in lending returns</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb i" style="width:1%"></div></div><span class="bl-amt g">included</span></div>
+</div>
+
+<!-- FIXED OBLIGATIONS -->
+<div class="sh needs" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name needs">Fixed Obligations</span><span class="sh-total needs">− $10,100 / mo</span></div>
+<div class="sb">
+  <div class="section-divider"><span class="sd-label">Housing</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">UWM Mortgage<div class="bl-note">Post insurance-escrow removal · down from $5,929</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:57%"></div></div><span class="bl-amt">$5,706</span></div>
+  <div class="bl"><span class="bl-name">APS Electric<div class="bl-note">2025 avg $506/mo · peaks Jun–Aug ($793) · low Dec–Jan ($354)</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:5%"></div></div><span class="bl-amt">$506</span></div>
+  <div class="bl"><span class="bl-name">Scottsdale Water<div class="bl-note">2025 avg $49/mo · very stable</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:0%"></div></div><span class="bl-amt">$49</span></div>
+  <div class="bl"><span class="bl-name">Waste Management — garbage<div class="bl-note">$109/mo · 2025 avg confirmed</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$109</span></div>
+  <div class="bl"><span class="bl-name">Rural Metro Fire<div class="bl-note">$101/mo · confirmed from 2025</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$101</span></div>
+  <div class="bl"><span class="bl-name">Pool maintenance<div class="bl-note">2025 avg $174/mo including chemical spikes</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:2%"></div></div><span class="bl-amt">$174</span></div>
+  <div class="section-divider"><span class="sd-label">Family obligations</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">Child support — Zelle Cottrell Chela<div class="bl-note">$883/mo confirmed · every month</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:9%"></div></div><span class="bl-amt">$883</span></div>
+  <div class="bl"><span class="bl-name">Bear loan repayment<div class="bl-note">$500/mo · ongoing · spread income offsets this</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:5%"></div></div><span class="bl-amt">$500</span></div>
+  <div class="bl"><span class="bl-name">Citi Simplicity CC paydown — 0% through Mar 2027<div class="bl-note">$4,571 remaining · paid off ~Sep 2026 at current pace</div></span><span class="bl-cat cat-d">Debt</span><div class="bl-bar"><div class="bb d" style="width:4%"></div></div><span class="bl-amt a">$381</span></div>
+  <div class="bl"><span class="bl-name">US Bank Shield CC paydown — 0% through May 2027<div class="bl-note">$14,641 remaining · paid off May 2027</div></span><span class="bl-cat cat-d">Debt</span><div class="bl-bar"><div class="bb d" style="width:10%"></div></div><span class="bl-amt a">$1,045</span></div>
+  <div class="section-divider"><span class="sd-label">Services</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">Hooks CPA<div class="bl-note">$650/mo · target: reduce to annual filing only (~$125/mo) when simplified</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:6%"></div></div><span class="bl-amt">$650</span></div>
+  <div class="bl"><span class="bl-name">Guardian life insurance</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$111</span></div>
+  <div class="bl"><span class="bl-name">T-Mobile (family plan)<div class="bl-note">$205/mo · 2025 actual was $129 · check current plan</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:2%"></div></div><span class="bl-amt">$205</span></div>
+  <div class="bl"><span class="bl-name">BAM Broadband internet</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$80</span></div>
+  <div class="bl"><span class="bl-name">CollegeCounts 529 — 3 kids total<div class="bl-note">Reduced from $500 to $200/mo to get back on track</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:2%"></div></div><span class="bl-amt">$200</span></div>
+  <div class="bl"><span class="bl-name">Cobblestone car wash</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:0%"></div></div><span class="bl-amt">$28</span></div>
+  <div class="bl"><span class="bl-name">HBO</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:0%"></div></div><span class="bl-amt">$10</span></div>
+  <div class="bl"><span class="bl-name">YMCA membership</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$91</span></div>
+  <div class="bl"><span class="bl-name">Auto-Owners insurance — amortized monthly<div class="bl-note">$3,475 paid annually in Feb · = $290/mo amortized</div></span><span class="bl-cat cat-f">Annual</span><div class="bl-bar"><div class="bb n" style="width:3%"></div></div><span class="bl-amt">$290</span></div>
+</div>
+
+<!-- VARIABLE SPENDING -->
+<div class="sh wants" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name wants">Variable Spending</span><span class="sh-total wants">− $6,745 / mo</span></div>
+<div class="sb">
+  <div class="section-divider"><span class="sd-label">Groceries &amp; household</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">Safeway<div class="bl-note">2025 avg $442/mo · primary grocery run</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:7%"></div></div><span class="bl-amt">$442</span></div>
+  <div class="bl"><span class="bl-name">Costco<div class="bl-note">2025 avg $617/mo · bulk stock-ups spike to $1,000+ some months</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:9%"></div></div><span class="bl-amt">$617</span></div>
+  <div class="bl"><span class="bl-name">Frys<div class="bl-note">2025 avg $74/mo · secondary grocery</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:1%"></div></div><span class="bl-amt">$74</span></div>
+  <div class="bl"><span class="bl-name">Target<div class="bl-note">2025 avg $326/mo · mix of household and discretionary</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:5%"></div></div><span class="bl-amt">$326</span></div>
+  <div class="bl"><span class="bl-name">Amazon<div class="bl-note">2025 avg $537/mo · ranges $126–$912 · Feb 2026 hit $724</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:8%"></div></div><span class="bl-amt">$537</span></div>
+  <div class="bl"><span class="bl-name">Tractor Supply<div class="bl-note">2025 avg $41/mo · horse property needs</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:1%"></div></div><span class="bl-amt">$41</span></div>
+  <div class="section-divider"><span class="sd-label">Transport</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">Gas — Safeway Fuel, Shell, Chevron<div class="bl-note">2025 avg $255/mo · summer road trips spike this</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:4%"></div></div><span class="bl-amt">$255</span></div>
+  <div class="bl"><span class="bl-name">Parking &amp; ADOT registration<div class="bl-note">2025 avg $70/mo · vehicle registrations are lumpy</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:1%"></div></div><span class="bl-amt">$70</span></div>
+  <div class="bl"><span class="bl-name">Car maintenance — Desert Car Care, Greulich, oil changes<div class="bl-note">2025 avg $845 (crash-distorted) · budgeting $200 going forward</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:3%"></div></div><span class="bl-amt">$200</span></div>
+  <div class="section-divider"><span class="sd-label">Kids &amp; education</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">Ron Paul Curriculum — homeschool<div class="bl-note">Replaces Montessori · $250–450/mo · saves $1,200–2,250/mo vs Montessori</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb w" style="width:7%"></div></div><span class="bl-amt">$450</span></div>
+  <div class="bl"><span class="bl-name">Kids activities — i9 Sports, camps<div class="bl-note">AZ ESA now covers camps · $150/mo net after reimbursement</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:2%"></div></div><span class="bl-amt">$150</span></div>
+  <div class="bl"><span class="bl-name">TEB Total Sports Therapy<div class="bl-note">$60/mo · $20/visit · confirmed from statements</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:1%"></div></div><span class="bl-amt">$60</span></div>
+  <div class="bl"><span class="bl-name">Dog sitter<div class="bl-note">Only during travel · avg $50/mo across the year</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:1%"></div></div><span class="bl-amt">$50</span></div>
+  <div class="section-divider"><span class="sd-label">Health &amp; personal care</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">Dermahealth membership<div class="bl-note">$149/mo · every month in 2025 · easiest pause before Europe</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:2%"></div></div><span class="bl-amt">$149</span></div>
+  <div class="bl"><span class="bl-name">Medical out-of-pocket — Cook Children's, MyChart, dental<div class="bl-note">Budget $300/mo · 2025 avg was $420 (Sawyer surgery distorted)</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb w" style="width:4%"></div></div><span class="bl-amt">$300</span></div>
+  <div class="bl"><span class="bl-name">Haircuts — Keep It Cut, Great Clips<div class="bl-note">2025 avg $62/mo</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:1%"></div></div><span class="bl-amt">$62</span></div>
+  <div class="section-divider"><span class="sd-label">Food &amp; entertainment</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">Dining out — Hornbill Sushi, 3 Regions Vietnamese, Summit Diner, Senor Taco, Taco Bell, McDonald's, Dairy Queen, Barros Pizza, etc.<div class="bl-note">2025 avg $630 · budgeted $700 — your call, this matters to you</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:10%"></div></div><span class="bl-amt">$700</span></div>
+  <div class="bl"><span class="bl-name">Entertainment — concerts, TopGolf, AMC, Harkins, Slick City, events<div class="bl-note">2025 avg $413 · budgeted $400</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:6%"></div></div><span class="bl-amt">$400</span></div>
+  <div class="section-divider"><span class="sd-label">Clothing &amp; misc</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">Clothing — Old Navy, eBay, Goodwill, Lands End, DSW<div class="bl-note">2025 avg $205/mo · consistent across all months</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:3%"></div></div><span class="bl-amt">$205</span></div>
+  <div class="bl"><span class="bl-name">Subscriptions — Apple, Xbox, Suno, ChatGPT, domains, Google Workspace<div class="bl-note">2025 avg ~$100/mo · some months higher with annual charges</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb w" style="width:1%"></div></div><span class="bl-amt">$100</span></div>
+  <div class="section-divider"><span class="sd-label">Travel savings</span><div class="sd-line"></div></div>
+  <div class="bl"><span class="bl-name">Europe trips ×2/yr — fund savings<div class="bl-note">2 weeks ×2/yr · ~$4,000–6,000/trip · $833/mo sets aside $10,000/yr · Amex 223K points for flights</div></span><span class="bl-cat cat-w">Travel</span><div class="bl-bar"><div class="bb w" style="width:12%"></div></div><span class="bl-amt">$833</span></div>
+</div>
+
+<div class="net-row">
+  <div>
+    <div class="net-label">Normalized monthly surplus</div>
+    <div class="net-note">$17,300 income − $10,100 fixed − $6,745 variable. Tight but positive. Citi payoff (+$381), CPA simplification (+$500), and $106K deployed (+$1,413) stack to $2,700+/mo surplus by end of 2026 without changing anything structural.</div>
+  </div>
+  <div class="net-val pos">+$455</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════
+     DECEMBER 2025
+     ══════════════════════════════════ -->
+<div class="panel" id="panel-dec">
+<div class="callout red"><b>Dec 2025 context:</b> Montessori still active at $2,700. Dermahealth $649 (procedure + membership). Home Depot $616. Second Sara paycheck fell into Jan statement — income appears low but is a timing issue.</div>
+
+<div class="sg">
+  <div class="sc income"><div class="sc-label">Income</div><div class="sc-val g">$13,611</div><div class="sc-sub">pension + 1 Sara check + Airbnb</div></div>
+  <div class="sc needs"><div class="sc-val b">$10,391</div><div class="sc-label">Fixed obligations</div></div>
+  <div class="sc wants"><div class="sc-val a">$5,780</div><div class="sc-label">Variable spending</div></div>
+  <div class="sc debt"><div class="sc-val p">$0</div><div class="sc-label">Debt paydown</div><div class="sc-sub">not yet running</div></div>
+  <div class="sc net"><div class="sc-val r">-$2,560</div><div class="sc-label">Net</div><div class="sc-sub">Montessori + timing</div></div>
+</div>
+
+<div class="sh income" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name income">Income</span><span class="sh-total income">+ $13,611</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">CalPERS pension</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb i" style="width:43%"></div></div><span class="bl-amt g">$5,817</span></div>
+  <div class="bl"><span class="bl-name">Sara salary — Dec 5 ($3,771) + Dec 19 ($3,736)<div class="bl-note">Third check fell into Jan · gross $5,268.80 each</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb i" style="width:56%"></div></div><span class="bl-amt g">$7,582</span></div>
+  <div class="bl"><span class="bl-name">Airbnb — Casita Dec 2025<div class="bl-note">$211.63 · December is lowest month of the year</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb i" style="width:2%"></div></div><span class="bl-amt g">$212</span></div>
+</div>
+
+<div class="sh needs" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name needs">Fixed Obligations</span><span class="sh-total needs">− $10,391</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">UWM Mortgage<div class="bl-note">$5,929 — insurance still escrowed · drops ~$266 soon</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:57%"></div></div><span class="bl-amt">$5,929</span></div>
+  <div class="bl"><span class="bl-name">Child support — Zelle Cottrell Chela</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:9%"></div></div><span class="bl-amt">$883</span></div>
+  <div class="bl"><span class="bl-name">Hooks CPA</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:6%"></div></div><span class="bl-amt">$650</span></div>
+  <div class="bl"><span class="bl-name">Bear loan repayment</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:5%"></div></div><span class="bl-amt">$500</span></div>
+  <div class="bl"><span class="bl-name">T-Mobile</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$205</span></div>
+  <div class="bl"><span class="bl-name">Guardian insurance</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$111</span></div>
+  <div class="bl"><span class="bl-name">BAM Broadband</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$80</span></div>
+  <div class="bl"><span class="bl-name">CollegeCounts 529</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:0%"></div></div><span class="bl-amt">$50</span></div>
+  <div class="bl"><span class="bl-name">APS + Water + Garbage + Rural Metro</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:7%"></div></div><span class="bl-amt">$707</span></div>
+  <div class="bl"><span class="bl-name">Safeway $447 + Frys $99</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:5%"></div></div><span class="bl-amt">$546</span></div>
+  <div class="bl"><span class="bl-name">Amazon</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:2%"></div></div><span class="bl-amt">$203</span></div>
+  <div class="bl"><span class="bl-name">Target ($27 SW CC + $555 WF debit)</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:5%"></div></div><span class="bl-amt">$422</span></div>
+  <div class="bl"><span class="bl-name">Gas</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$106</span></div>
+</div>
+
+<div class="sh wants" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name wants">Variable / Discretionary</span><span class="sh-total wants">− $5,780</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">Dynamite Montessori — LAST FULL MONTH<div class="bl-note">$2,700 · eliminated after this · saves $1,579–2,700/mo</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:47%"></div></div><span class="bl-amt r">$2,700</span></div>
+  <div class="bl"><span class="bl-name">Dermahealth — Dec 5 procedure ($500) + Dec 16 membership ($149)</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:11%"></div></div><span class="bl-amt r">$649</span></div>
+  <div class="bl"><span class="bl-name">Home Depot — $408 Dec 18 + $208 Dec 28</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:11%"></div></div><span class="bl-amt">$616</span></div>
+  <div class="bl"><span class="bl-name">Black Mountain Dental Care — $359 + $78</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:7%"></div></div><span class="bl-amt">$437</span></div>
+  <div class="bl"><span class="bl-name">Medical — Cook Children's $235, MyChart ×2</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:5%"></div></div><span class="bl-amt">$275</span></div>
+  <div class="bl"><span class="bl-name">Dining — 3 Regions $102, Hornbill $73, McDonald's, Raising Cane's</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:4%"></div></div><span class="bl-amt">$226</span></div>
+  <div class="bl"><span class="bl-name">TEB Sports Therapy ×4, i9 Sports, YMCA, Jiffy Lube</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:6%"></div></div><span class="bl-amt">$382</span></div>
+  <div class="bl"><span class="bl-name">Goodwill ×4, Tractor Supply, clothing, subscriptions, misc</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:8%"></div></div><span class="bl-amt">$495</span></div>
+</div>
+
+<div class="net-row">
+  <div><div class="net-label">December 2025 — corrected net</div><div class="net-note">Income low due to Sara paycheck timing. Montessori $2,700 and Dermahealth procedure $649 are the biggest discretionary hits. Neither recurs.</div></div>
+  <div class="net-val neg">-$2,560</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════
+     JANUARY 2026
+     ══════════════════════════════════ -->
+<div class="panel" id="panel-jan">
+<div class="callout green"><b>Jan 2026 bright spots:</b> First Aspen Pines lending income ($1,500 net). Citi + US Bank paydowns now running. Wants at 23% — well under 30%. Montessori last charge ($1,579). Wagoneers purchased from ABD Holdings account (not household budget).</div>
+
+<div class="sg">
+  <div class="sc income"><div class="sc-val g">$16,973</div><div class="sc-label">Income</div></div>
+  <div class="sc needs"><div class="sc-val b">$12,775</div><div class="sc-label">Fixed obligations</div></div>
+  <div class="sc wants"><div class="sc-val a">$3,868</div><div class="sc-label">Variable spending</div></div>
+  <div class="sc debt"><div class="sc-val p">$1,426</div><div class="sc-label">Real debt paydown</div></div>
+  <div class="sc net"><div class="sc-val r">-$1,096</div><div class="sc-label">Net<div style="font-size:11px;color:var(--text3);font-family:Syne,sans-serif;">strip CC pay: +$330</div></div></div>
+</div>
+
+<div class="sh income" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name income">Income</span><span class="sh-total income">+ $16,973</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">CalPERS pension</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb i" style="width:34%"></div></div><span class="bl-amt g">$5,817</span></div>
+  <div class="bl"><span class="bl-name">Sara salary — Jan 2 ($3,845.95) + Jan 16 ($3,845.95)<div class="bl-note">Jan 30 check ($4,215.83) assigned to Feb</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb i" style="width:45%"></div></div><span class="bl-amt g">$7,692</span></div>
+  <div class="bl"><span class="bl-name">Airbnb — Casita Jan 2026<div class="bl-note">$1,593.81 per Airbnb earnings report · 3 payouts to Apex</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb i" style="width:9%"></div></div><span class="bl-amt g">$1,594</span></div>
+  <div class="bl"><span class="bl-name">Aspen Pines net — first month<div class="bl-note">$4,000 received · $2,500 to Gretchen = $1,500 yours</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb i" style="width:9%"></div></div><span class="bl-amt g">$1,500</span></div>
+</div>
+
+<div class="sh needs" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name needs">Fixed Obligations</span><span class="sh-total needs">− $12,775</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">UWM Mortgage — $5,929.02</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:46%"></div></div><span class="bl-amt">$5,929</span></div>
+  <div class="bl"><span class="bl-name">Citi CC paydown — autopay Jan 7<div class="bl-note">$5,714 → $5,333 · 0% through Mar 2027</div></span><span class="bl-cat cat-d">Debt</span><div class="bl-bar"><div class="bb d" style="width:3%"></div></div><span class="bl-amt a">$381</span></div>
+  <div class="bl"><span class="bl-name">US Bank CC paydown<div class="bl-note">$16,730 → $15,686 · 0% through May 2027</div></span><span class="bl-cat cat-d">Debt</span><div class="bl-bar"><div class="bb d" style="width:8%"></div></div><span class="bl-amt a">$1,045</span></div>
+  <div class="bl"><span class="bl-name">Child support, CPA, Bear loan</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:16%"></div></div><span class="bl-amt">$2,033</span></div>
+  <div class="bl"><span class="bl-name">Guardian, T-Mobile, BAM, YMCA, HBO, Cobblestone</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:4%"></div></div><span class="bl-amt">$424</span></div>
+  <div class="bl"><span class="bl-name">CollegeCounts 529 — 2 payments this month<div class="bl-note">Jan 12 + Jan 15 · $100 each</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:1%"></div></div><span class="bl-amt">$200</span></div>
+  <div class="bl"><span class="bl-name">Utilities (APS, water, garbage, Rural Metro)</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:4%"></div></div><span class="bl-amt">$445</span></div>
+  <div class="bl"><span class="bl-name">Safeway $355 + Frys $218 + Costco $1,190 (stock-up month)<div class="bl-note">Costco $1,190 is high — 4 visits including $452 and $432 runs</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:14%"></div></div><span class="bl-amt r">$1,763</span></div>
+  <div class="bl"><span class="bl-name">Amazon $311 + Target $48 + Gas $186</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:4%"></div></div><span class="bl-amt">$545</span></div>
+</div>
+
+<div class="sh wants" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name wants">Variable / Discretionary</span><span class="sh-total wants">− $3,868</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">Dynamite Montessori — penultimate charge<div class="bl-note">$1,579 · gone after this month</div></span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:41%"></div></div><span class="bl-amt r">$1,579</span></div>
+  <div class="bl"><span class="bl-name">Dining — Hornbill ×2 $145, Barros $46, Senor Taco, Summit $81, In-N-Out, McDonald's ×3, Taco Bell</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:14%"></div></div><span class="bl-amt">$542</span></div>
+  <div class="bl"><span class="bl-name">Entertainment — Slick City $392, Barrett Jackson $78, Goat Daddy Roping $127, Harkins</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:12%"></div></div><span class="bl-amt">$469</span></div>
+  <div class="bl"><span class="bl-name">Medical — Cook Children's $207, Carfax $65 (Wagoneer research)</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:7%"></div></div><span class="bl-amt">$272</span></div>
+  <div class="bl"><span class="bl-name">Dermahealth $149, Goodwill ×3, AutoZone $121, YMCA, TEB sports therapy, i9 Sports</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:13%"></div></div><span class="bl-amt">$514</span></div>
+  <div class="bl"><span class="bl-name">Subscriptions (Apple ×3, Xbox ×2, Suno, LawDepot), clothing Shady Rays $72, Tractor Supply $72, GiftHealth $81</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:13%"></div></div><span class="bl-amt">$492</span></div>
+</div>
+
+<div class="net-row">
+  <div><div class="net-label">January 2026 — corrected net</div><div class="net-note">Montessori $1,579 and Costco stock-up $1,190 are the culprits. Strip the CC debt paydowns ($1,426) and you're +$330 on actual spending. Both issues normalized going forward.</div></div>
+  <div class="net-val neg">-$1,096</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════
+     FEBRUARY 2026
+     ══════════════════════════════════ -->
+<div class="panel" id="panel-feb">
+<div class="callout green"><b>Feb 2026 — cleanest month:</b> Montessori eliminated. Strongest income $19,330. Airbnb $3,106 (peak). Sara's Feb 27 paycheck $4,995 (bonus included). Strip $3,475 annual auto insurance → wants = $2,626 (14%). Amazon $724 is the only flag.</div>
+
+<div class="sg">
+  <div class="sc income"><div class="sc-val g">$19,330</div><div class="sc-label">Income</div><div class="sc-sub">strongest month</div></div>
+  <div class="sc needs"><div class="sc-val b">$13,214</div><div class="sc-label">Fixed obligations</div></div>
+  <div class="sc wants"><div class="sc-val a">$6,101</div><div class="sc-label">Variable (auto ins skews)</div></div>
+  <div class="sc debt"><div class="sc-val p">$1,426</div><div class="sc-label">Real debt paydown</div></div>
+  <div class="sc net"><div class="sc-val r">-$1,411</div><div class="sc-label">Net<div style="font-size:11px;color:var(--text3);font-family:Syne,sans-serif;">ex-auto ins: +$2,064</div></div></div>
+</div>
+
+<div class="sh income" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name income">Income</span><span class="sh-total income">+ $19,330</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">CalPERS pension</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb i" style="width:30%"></div></div><span class="bl-amt g">$5,817</span></div>
+  <div class="bl"><span class="bl-name">Sara salary — Feb 13 ($3,911) + Feb 27 ($4,995)<div class="bl-note">Feb 27 includes $25 bonus incentive · largest paycheck on record</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb i" style="width:46%"></div></div><span class="bl-amt g">$8,907</span></div>
+  <div class="bl"><span class="bl-name">Airbnb — Casita Feb 2026<div class="bl-note">$3,105.55 · peak winter season · highest month of the year</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb i" style="width:16%"></div></div><span class="bl-amt g">$3,106</span></div>
+  <div class="bl"><span class="bl-name">Aspen Pines net — $4,000 received Feb 9</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb i" style="width:8%"></div></div><span class="bl-amt g">$1,500</span></div>
+</div>
+
+<div class="sh needs" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name needs">Fixed Obligations</span><span class="sh-total needs">− $13,214</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">UWM Mortgage — $5,972.42<div class="bl-note">Slightly higher · drops to $5,706 when escrow removed</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:45%"></div></div><span class="bl-amt">$5,972</span></div>
+  <div class="bl"><span class="bl-name">Citi CC paydown — autopay Feb 7<div class="bl-note">$5,333 → $4,952</div></span><span class="bl-cat cat-d">Debt</span><div class="bl-bar"><div class="bb d" style="width:3%"></div></div><span class="bl-amt a">$381</span></div>
+  <div class="bl"><span class="bl-name">US Bank CC paydown<div class="bl-note">$15,686 → $14,641</div></span><span class="bl-cat cat-d">Debt</span><div class="bl-bar"><div class="bb d" style="width:8%"></div></div><span class="bl-amt a">$1,045</span></div>
+  <div class="bl"><span class="bl-name">CA State Bar dues — Sara (annual)<div class="bl-note">$551 Feb 20 · once per year</div></span><span class="bl-cat cat-f">Annual</span><div class="bl-bar"><div class="bb n" style="width:4%"></div></div><span class="bl-amt">$551</span></div>
+  <div class="bl"><span class="bl-name">Child support, CPA, Bear loan</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:16%"></div></div><span class="bl-amt">$2,033</span></div>
+  <div class="bl"><span class="bl-name">Guardian, T-Mobile, BAM, CollegeCounts $200, YMCA, HBO, Cobblestone</span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb n" style="width:5%"></div></div><span class="bl-amt">$624</span></div>
+  <div class="bl"><span class="bl-name">Utilities (APS, water, garbage, Rural Metro)</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:4%"></div></div><span class="bl-amt">$511</span></div>
+  <div class="bl"><span class="bl-name">Safeway $402 + Frys $140 + Costco $398</span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:7%"></div></div><span class="bl-amt">$940</span></div>
+  <div class="bl"><span class="bl-name">Amazon $724 + Target $356 + Gas $80<div class="bl-note">Amazon $724 is highest of 3 months — worth watching</div></span><span class="bl-cat cat-v">Variable</span><div class="bl-bar"><div class="bb n" style="width:9%"></div></div><span class="bl-amt r">$1,160</span></div>
+</div>
+
+<div class="sh wants" onclick="tog(this)"><span class="sh-toggle">▾</span><span class="sh-name wants">Variable / Discretionary</span><span class="sh-total wants">− $6,101</span></div>
+<div class="sb">
+  <div class="bl"><span class="bl-name">Auto-Owners insurance — ANNUAL lump sum<div class="bl-note">$3,474.84 paid Feb 24 · removes $266/mo from mortgage escrow going forward · true monthly cost = $290/mo amortized</div></span><span class="bl-cat cat-f">Annual</span><div class="bl-bar"><div class="bb w" style="width:57%"></div></div><span class="bl-amt r">$3,475</span></div>
+  <div class="bl"><span class="bl-name">Ron Paul Curriculum — $250 + $450<div class="bl-note">Replaces Montessori · $700 first month then ~$450/mo ongoing</div></span><span class="bl-cat cat-f">Fixed</span><div class="bl-bar"><div class="bb w" style="width:11%"></div></div><span class="bl-amt">$700</span></div>
+  <div class="bl"><span class="bl-name">Dining — 3 Regions $90, Hornbill $78, Summit $79, Blu Burger $76, Senor Taco, Taco Bell, Dairy Queen</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:7%"></div></div><span class="bl-amt">$448</span></div>
+  <div class="bl"><span class="bl-name">Dermahealth — $149 membership + $227 procedure</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:6%"></div></div><span class="bl-amt r">$376</span></div>
+  <div class="bl"><span class="bl-name">Entertainment — Gold Rush $67, Rodeo Scottsdale $104, Wickenburg ×3, Gallery $27</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:4%"></div></div><span class="bl-amt">$239</span></div>
+  <div class="bl"><span class="bl-name">Harbor Freight ×2 $268 (Wagoneer project), Express Paint $103, Goodwill ×3 $142, YMCA $91, i9 Sports $75, subscriptions $51, misc $133</span><span class="bl-cat cat-w">Want</span><div class="bl-bar"><div class="bb w" style="width:15%"></div></div><span class="bl-amt">$863</span></div>
+</div>
+
+<div class="net-row">
+  <div><div class="net-label">February 2026 — corrected net</div><div class="net-note">Strip the $3,475 annual auto insurance and net flips to +$2,064. Feb is your cleanest spending month — Montessori gone, Costco normal. Amazon $724 is the only real flag.</div></div>
+  <div class="net-val neg">-$1,411</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════
+     LOOKING FORWARD
+     ══════════════════════════════════ -->
+<div class="panel" id="panel-forward">
+
+<div class="callout green"><b>The trajectory is strongly positive.</b> The $455/mo current surplus grows automatically as debts pay off and income milestones hit. By mid-2027 you're banking $3,500+/mo without changing a single lifestyle decision.</div>
+
+<div class="fwd-grid">
+  <div class="fwd-card"><div class="fwd-period">Now</div><div class="fwd-surplus pos">+$455</div><div class="fwd-detail">Baseline · all current income and expenses normalized</div></div>
+  <div class="fwd-card"><div class="fwd-period">May 1, 2026</div><div class="fwd-surplus pos">+$571</div><div class="fwd-detail">Pension → $5,933 (+$116/mo)</div></div>
+  <div class="fwd-card"><div class="fwd-period">Citi paid off</div><div class="fwd-surplus pos">+$952</div><div class="fwd-detail">Sep 2026 at current pace · or now with tax refund → +$381/mo</div></div>
+  <div class="fwd-card best"><div class="fwd-period">CPA simplified</div><div class="fwd-surplus pos">+$1,452</div><div class="fwd-detail">Annual filing only · saves ~$500/mo · biggest easy cut</div></div>
+  <div class="fwd-card best"><div class="fwd-period">$106K deployed at 16%</div><div class="fwd-surplus pos">+$2,865</div><div class="fwd-detail">+$1,413/mo the moment that capital is redeployed</div></div>
+  <div class="fwd-card best"><div class="fwd-period">US Bank paid off</div><div class="fwd-surplus pos">+$3,910</div><div class="fwd-detail">May 2027 · +$1,045/mo freed · almost $4K/mo surplus</div></div>
+</div>
+
+<div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:12px;font-weight:600;">Key milestones to track</div>
+<div class="timeline">
+  <div class="tl-row"><div class="tl-date">Now</div><div class="tl-dot g"></div><div class="tl-content">$15K tax refund arrives (K-1 from Pensacola pending). Best move: pay off Citi ($4,571) immediately — frees $381/mo six months early and keeps $10K+ as cash buffer.</div><div class="tl-amount g">+$381/mo</div></div>
+  <div class="tl-row"><div class="tl-date">Next week</div><div class="tl-dot a"></div><div class="tl-content">$7K Wagoneer (1990) repair bill due. Comes from WF savings. One-time hit, not recurring.</div><div class="tl-amount a">-$7,000</div></div>
+  <div class="tl-row"><div class="tl-date">Soon</div><div class="tl-dot g"></div><div class="tl-content">Mortgage escrow drops ~$266/mo — auto insurance now paid directly. Confirm with UWM.</div><div class="tl-amount g">+$266/mo</div></div>
+  <div class="tl-row"><div class="tl-date">May 1</div><div class="tl-dot g"></div><div class="tl-content">Pension increases to $5,933/mo (+$116). Automatic, no action needed.</div><div class="tl-amount g">+$116/mo</div></div>
+  <div class="tl-row"><div class="tl-date">Mid-2026</div><div class="tl-dot g"></div><div class="tl-content">Fix rust on 1988 Wagoneer, sell it. Recoup capital. Budget $2,000–4,000 for rust work.</div><div class="tl-amount g">capital back</div></div>
+  <div class="tl-row"><div class="tl-date">Mid-2026</div><div class="tl-dot a"></div><div class="tl-content">CPA: transition to annual-only filing. Saves $500–600/mo. Bookkeeping done with AI help.</div><div class="tl-amount g">+$500/mo</div></div>
+  <div class="tl-row"><div class="tl-date">When received</div><div class="tl-dot g"></div><div class="tl-content">$106K returned from property — deploy at 16% immediately for +$1,413/mo passive income.</div><div class="tl-amount g">+$1,413/mo</div></div>
+  <div class="tl-row"><div class="tl-date">Sep 2026</div><div class="tl-dot g"></div><div class="tl-content">Citi fully paid off at current $381/mo pace (or already done with tax refund).</div><div class="tl-amount g">+$381/mo</div></div>
+  <div class="tl-row"><div class="tl-date">May 2027</div><div class="tl-dot g"></div><div class="tl-content">US Bank fully paid off. $1,045/mo permanently freed. Surplus exceeds $3,900/mo.</div><div class="tl-amount g">+$1,045/mo</div></div>
+</div>
+
+<div class="callout" style="margin-top:1.5rem;"><b>Biggest levers if you want to accelerate:</b> CPA → annual only (+$500), dining $700 → $500 (-$200), Amazon tighter (-$150). Those three alone push the current surplus from $455 to $1,305/mo — nearly tripling it without waiting for any debt to pay off.</div>
+
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+function tog(hdr) {
+  const body = hdr.nextElementSibling;
+  const arrow = hdr.querySelector('.sh-toggle');
+  if(body.classList.contains('collapsed')){ body.classList.remove('collapsed'); arrow.textContent='▾'; }
+  else { body.classList.add('collapsed'); arrow.textContent='▸'; }
+}
+</script>
+</body>
+</html>

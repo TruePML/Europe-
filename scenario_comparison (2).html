@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Decision Scenarios</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: #0a0a09;
+    color: #e8e8e2;
+    padding: 2rem 1.5rem 4rem;
+    max-width: 820px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  .headline {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #f0f0ea;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .sub {
+    font-size: 11px;
+    color: #909088;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+  }
+
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 2.5rem 0 1rem;
+  }
+  .cat-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 14px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .cat-label.sell { background: #0d2035; color: #5aaaf0; }
+  .cat-label.sf   { background: #0a2018; color: #3dd68c; }
+  .cat-label.rent { background: #251800; color: #f0a830; }
+  .cat-label.cmp  { background: #1e1e1c; color: #888; }
+  .cat-line { flex: 1; height: 0.5px; background: #252522; }
+
+  .grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .s-card {
+    border: 1px solid #2a2a26;
+    border-radius: 16px;
+    padding: 1.25rem;
+    background: #161614;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.15s, transform 0.15s;
+  }
+  .s-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); transform: translateY(-2px); }
+  .s-card.sell { border-top: 3px solid #4a9ee8; }
+  .s-card.sf   { border-top: 3px solid #1a9e60; }
+  .s-card.best-card { outline: 2px solid #1a9e60; outline-offset: -1px; }
+
+  .best-tag {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: #1a9e60;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 99px;
+  }
+
+  .s-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #777770;
+    margin-bottom: 5px;
+  }
+  .s-price {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    color: #f0f0ea;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+  .divider { height: 0.5px; background: #252522; margin: 0.65rem 0; }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #a0a09a;
+    margin: 4px 0;
+    gap: 6px;
+  }
+  .row .val { font-weight: 600; text-align: right; white-space: nowrap; }
+  .pos { color: #1a9e60; }
+  .neg { color: #d94040; }
+  .warn { color: #e09020; }
+  .neutral { color: #ddddd8; }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 0.875rem;
+    padding-top: 0.875rem;
+    border-top: 1.5px solid #252522;
+    gap: 8px;
+  }
+  .total-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: #777770; }
+  .total-sub { font-size: 9px; color: #585852; margin-top: 2px; }
+  .total-val {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  /* RENT CARD */
+  .rent-card {
+    border: 1px solid #2a2a26;
+    border-top: 3px solid #e8a020;
+    border-radius: 16px;
+    padding: 1.5rem;
+    background: #161614;
+    transition: box-shadow 0.15s;
+  }
+  .rent-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+  .rent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
+  .col-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #777770; margin-bottom: 0.75rem; }
+  .rent-footer {
+    display: flex; flex-wrap: wrap; gap: 1.5rem;
+    margin-top: 1rem; padding-top: 1rem;
+    border-top: 0.5px solid #252522;
+  }
+  .stat-block .stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: #686860; margin-bottom: 3px; }
+  .stat-block .stat-val { font-size: 16px; font-weight: 700; }
+  .stat-block .stat-note { font-size: 9px; color: #585852; }
+
+  /* BAR CHART */
+  .bars { margin-top: 0.5rem; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin: 9px 0; }
+  .bar-label { font-size: 11px; color: #888; min-width: 195px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-track { flex: 1; height: 11px; background: #1a1a18; border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 11px; border-radius: 99px; }
+  .bar-fill.blue  { background: #4a9ee8; }
+  .bar-fill.green { background: #1a9e60; }
+  .bar-fill.amber { background: #e8a020; }
+  .bar-fill.red   { background: #d94040; }
+  .bar-num { font-size: 11px; font-weight: 700; min-width: 80px; text-align: right; }
+
+  /* EUROPE PANEL */
+  .europe-panel {
+    background: #111110;
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .europe-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #888; margin-bottom: 1rem;
+  }
+  .europe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+  }
+  .e-item {
+    background: #161614;
+    border-radius: 10px;
+    padding: 0.875rem;
+    border: 1px solid #2a2a26;
+  }
+  .e-item.highlight { border-color: #1a9e60; }
+  .e-item.highlight-warn { border-color: #e8a020; }
+  .e-label { font-size: 9px; color: #686860; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .e-val { font-family: 'Instrument Serif', serif; font-size: 22px; line-height: 1; }
+  .e-note { font-size: 9px; color: #585852; margin-top: 3px; }
+
+  .footnote {
+    font-size: 10px;
+    color: #686860;
+    line-height: 1.7;
+    margin-top: 1.5rem;
+    padding: 0.875rem 1rem;
+    border-left: 2px solid #2a2a26;
+  }
+
+  @media (max-width: 580px) {
+    .grid3 { grid-template-columns: 1fr; }
+    .rent-grid { grid-template-columns: 1fr; }
+    .bar-label { min-width: 120px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="headline">House Decision Scenarios</div>
+<div class="sub">All 7 paths compared · Cave Creek property · Europe trip context · Mar 2026</div>
+
+<!-- SELL TRADITIONAL -->
+<div class="cat-header">
+  <span class="cat-label sell">Sell Traditional</span>
+  <div class="cat-line"></div>
+</div>
+
+<div class="grid3">
+
+  <div class="s-card sell">
+    <div class="s-label">Traditional Sale</div>
+    <div class="s-price">$1,300,000</div>
+    <div class="row"><span>Mortgage payoff</span><span class="val neg">−$1,008,190</span></div>
+    <div class="row"><span>Realtor fees (5.5%)</span><span class="val neg">−$71,500</span></div>
+    <div class="row"><span>Closing costs (~1%)</span><span class="val neg">−$13,000</span></div>
+    <div class="divider"></div>
+    <div class="row"><span>Net proceeds</span><span class="val neutral">$207,310</span></div>
+    <div class="row"><span>Deployed at 16%/yr</span><span class="val pos">$33,170/yr</span></div>
+    <div class="row"><span>Monthly lending income</span><span class="val pos">$2,764/mo</span></div>
+    <div class="row"><span>Mortgage obligation gone</span><span class="val pos">+$5,706/mo freed</span></div>
+    <div class="total-row">
+      <div><div class="total-label">Yr 1 value generated</div><div class="total-sub">proceeds + 1yr lending + mortgage freed</div></div>
+      <div class="total-val warn">$307K</div>
+    </div>
+  </div>
+
+  <div class="s-card sell">
+    <div class="s-label">Traditional Sale</div>
+    <div class="s-price">$1,250,000</div>
+    <div class="row"><span>Mortgage payoff</span><span class="val neg">−$1,008,190</span></div>
+    <div class="row"><span>Realtor fees (5.5%)</span><span class="val neg">−$68,750</span></div>
+    <div class="row"><span>Closing costs (~1%)</span><span class="val neg">−$12,500</span></div>
+    <div class="divider"></div>
+    <div class="row"><span>Net proceeds</span><span class="val neutral">$160,560</span></div>
+    <div class="row"><span>Deployed at 16%/yr</span><span class="val pos">$25,690/yr</span></div>
+    <div class="row"><span>Monthly lending income</span><span class="val pos">$2,141/mo</span></div>
+    <div class="row"><span>Mortgage obligation gone</span><span class="val pos">+$5,706/mo freed</span></div>
+    <div class="total-row">
+      <div><div class="total-label">Yr 1 value generated</div><div class="total-sub">proceeds + 1yr lending + mortgage freed</div></div>
+      <div class="total-val warn">$255K</div>
+    </div>
+  </div>
+
+  <div class="s-card sell">
+    <div class="s-label">Traditional Sale</div>
+    <div class="s-price">$1,200,000</div>
+    <div class="row"><span>Mortgage payoff</span><span class="val neg">−$1,008,190</span></div>
+    <div class="row"><span>Realtor fees (5.5%)</span><span class="val neg">−$66,000</span></div>
+    <div class="row"><span>Closing costs (~1%)</span><span class="val neg">−$12,000</span></div>
+    <div class="divider"></div>
+    <div class="row"><span>Net proceeds</span><span class="val neutral">$113,810</span></div>
+    <div class="row"><span>Deployed at 16%/yr</span><span class="val pos">$18,210/yr</span></div>
+    <div class="row"><span>Monthly lending income</span><span class="val pos">$1,518/mo</span></div>
+    <div class="row"><span>Mortgage obligation gone</span><span class="val pos">+$5,706/mo freed</span></div>
+    <div class="total-row">
+      <div><div class="total-label">Yr 1 value generated</div><div class="total-sub">proceeds + 1yr lending + mortgage freed</div></div>
+      <div class="total-val neg">$200K</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SELLER FINANCE CFD -->
+<div class="cat-header">
+  <span class="cat-label sf">Seller Finance · CFD · 20% Down · Deed Stays With You</span>
+  <div class="cat-line"></div>
+</div>
+
+<div class="grid3">
+
+  <div class="s-card sf best-card">
+    <div class="best-tag">Best overall</div>
+    <div class="s-label">Contract for Deed</div>
+    <div class="s-price">$1,400,000</div>
+    <div class="row"><span>Down payment (20%)</span><span class="val pos">$280,000 cash to you</span></div>
+    <div class="row"><span>Buyer takes mortgage</span><span class="val pos">$1,008,190 gone</span></div>
+    <div class="row"><span>Equity note you carry</span><span class="val neutral">~$111,810 @ 4%</span></div>
+    <div class="row"><span>Note payment to you</span><span class="val pos">~$534/mo</span></div>
+    <div class="divider"></div>
+    <div class="row"><span>$280K deployed @ 16%</span><span class="val pos">$44,800/yr · $3,733/mo</span></div>
+    <div class="row"><span>Realtor fees avoided</span><span class="val pos">$0 (saved $77K)</span></div>
+    <div class="row"><span>Mortgage obligation gone</span><span class="val pos">+$5,706/mo freed</span></div>
+    <div class="total-row">
+      <div><div class="total-label">Yr 1 value generated</div><div class="total-sub">down + lending + note + mortgage freed</div></div>
+      <div class="total-val pos">$420K</div>
+    </div>
+  </div>
+
+  <div class="s-card sf">
+    <div class="s-label">Contract for Deed</div>
+    <div class="s-price">$1,350,000</div>
+    <div class="row"><span>Down payment (20%)</span><span class="val pos">$270,000 cash to you</span></div>
+    <div class="row"><span>Buyer takes mortgage</span><span class="val pos">$1,008,190 gone</span></div>
+    <div class="row"><span>Equity note you carry</span><span class="val neutral">~$71,810 @ 4%</span></div>
+    <div class="row"><span>Note payment to you</span><span class="val pos">~$343/mo</span></div>
+    <div class="divider"></div>
+    <div class="row"><span>$270K deployed @ 16%</span><span class="val pos">$43,200/yr · $3,600/mo</span></div>
+    <div class="row"><span>Realtor fees avoided</span><span class="val pos">$0 (saved $74K)</span></div>
+    <div class="row"><span>Mortgage obligation gone</span><span class="val pos">+$5,706/mo freed</span></div>
+    <div class="total-row">
+      <div><div class="total-label">Yr 1 value generated</div><div class="total-sub">down + lending + note + mortgage freed</div></div>
+      <div class="total-val pos">$405K</div>
+    </div>
+  </div>
+
+  <div class="s-card sf">
+    <div class="s-label">Contract for Deed</div>
+    <div class="s-price">$1,300,000</div>
+    <div class="row"><span>Down payment (20%)</span><span class="val pos">$260,000 cash to you</span></div>
+    <div class="row"><span>Buyer takes mortgage</span><span class="val pos">$1,008,190 gone</span></div>
+    <div class="row"><span>Equity note you carry</span><span class="val neutral">~$31,810 @ 4%</span></div>
+    <div class="row"><span>Note payment to you</span><span class="val pos">~$152/mo</span></div>
+    <div class="divider"></div>
+    <div class="row"><span>$260K deployed @ 16%</span><span class="val pos">$41,600/yr · $3,467/mo</span></div>
+    <div class="row"><span>Realtor fees avoided</span><span class="val pos">$0 (saved $71.5K)</span></div>
+    <div class="row"><span>Mortgage obligation gone</span><span class="val pos">+$5,706/mo freed</span></div>
+    <div class="total-row">
+      <div><div class="total-label">Yr 1 value generated</div><div class="total-sub">down + lending + note + mortgage freed</div></div>
+      <div class="total-val pos">$388K</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- RENT & HOLD -->
+<div class="cat-header">
+  <span class="cat-label rent">Rent &amp; Hold · $4,500/mo · Keep Home for Return</span>
+  <div class="cat-line"></div>
+</div>
+
+<div class="rent-card">
+  <div class="s-label">Rent it out · Pension + Aspen + $3K/mo side hustle · 12-month Europe trip</div>
+  <div class="s-price" style="margin-bottom:0;">$4,500/mo rent · You come home to your house</div>
+
+  <div class="rent-grid">
+    <div>
+      <div class="col-label">Income while in Europe</div>
+      <div class="row"><span>CalPERS pension (Wes)</span><span class="val pos">$5,817</span></div>
+      <div class="row"><span>Aspen lending net (your 16%)</span><span class="val pos">$1,500</span></div>
+      <div class="row"><span>Side hustle (you + Sara)</span><span class="val pos">$3,000</span></div>
+      <div class="row"><span>Rent received from tenant</span><span class="val pos">$4,500</span></div>
+      <div class="divider"></div>
+      <div class="row" style="font-weight:700;font-size:13px;"><span>Total income</span><span class="val pos">$14,817/mo</span></div>
+    </div>
+    <div>
+      <div class="col-label">Expenses while in Europe</div>
+      <div class="row"><span>UWM mortgage (still yours)</span><span class="val neg">$5,706</span></div>
+      <div class="row"><span>Prop mgmt fee (~8% rent)</span><span class="val neg">$360</span></div>
+      <div class="row"><span>Europe accommodation</span><span class="val neg">~$3,200</span></div>
+      <div class="row"><span>Europe food (family of 4)</span><span class="val neg">$1,500</span></div>
+      <div class="row"><span>Transport + health insurance</span><span class="val neg">$850</span></div>
+      <div class="row"><span>US Bank + Citi CC payoffs</span><span class="val neg">$1,426</span></div>
+      <div class="divider"></div>
+      <div class="row" style="font-weight:700;font-size:13px;"><span>Total expenses</span><span class="val neg">$13,042/mo</span></div>
+    </div>
+  </div>
+
+  <div class="rent-footer">
+    <div class="stat-block">
+      <div class="stat-label">Monthly net surplus</div>
+      <div class="stat-val warn">+$1,775</div>
+      <div class="stat-note">tight but positive</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">12-month cash surplus</div>
+      <div class="stat-val warn">$21,300</div>
+      <div class="stat-note">actual cash remaining</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Home value on return</div>
+      <div class="stat-val pos">~$1,275,000</div>
+      <div class="stat-note">2%/yr appreciation</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Equity on return</div>
+      <div class="stat-val pos">~$280,000</div>
+      <div class="stat-note">vs ~$995K remaining mortgage</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Unique advantage</div>
+      <div class="stat-val" style="font-size:14px;color:#c07800;">You keep the house</div>
+      <div class="stat-note">No need to rebuy on return</div>
+    </div>
+  </div>
+</div>
+
+<!-- BAR COMPARISON -->
+<div class="cat-header" style="margin-top:3rem;">
+  <span class="cat-label cmp">Year 1 Value Comparison (all scenarios)</span>
+  <div class="cat-line"></div>
+</div>
+
+<div class="bars">
+  <div class="bar-row">
+    <div class="bar-label">CFD $1.4M ★ Best overall</div>
+    <div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div>
+    <div class="bar-num pos">$420K</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">CFD $1.35M</div>
+    <div class="bar-track"><div class="bar-fill green" style="width:96%"></div></div>
+    <div class="bar-num pos">$405K</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">CFD $1.3M</div>
+    <div class="bar-track"><div class="bar-fill green" style="width:92%"></div></div>
+    <div class="bar-num pos">$388K</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">Sell traditional $1.3M</div>
+    <div class="bar-track"><div class="bar-fill blue" style="width:73%"></div></div>
+    <div class="bar-num warn">$307K</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">Sell traditional $1.25M</div>
+    <div class="bar-track"><div class="bar-fill blue" style="width:61%"></div></div>
+    <div class="bar-num warn">$255K</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">Sell traditional $1.2M</div>
+    <div class="bar-track"><div class="bar-fill red" style="width:48%"></div></div>
+    <div class="bar-num neg">$200K</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">Rent &amp; hold $4,500/mo</div>
+    <div class="bar-track"><div class="bar-fill amber" style="width:5%"></div></div>
+    <div class="bar-num warn">$21K cash<br><span style="font-size:9px;color:#1a9e60;">+ $280K equity kept</span></div>
+  </div>
+</div>
+
+<!-- EUROPE INCOME BREAKDOWN -->
+<div class="europe-panel">
+  <div class="europe-title">Rent scenario — Europe monthly income breakdown (pension + Aspen + side hustle)</div>
+  <div class="europe-grid">
+    <div class="e-item">
+      <div class="e-label">CalPERS pension</div>
+      <div class="e-val pos">$5,817</div>
+      <div class="e-note">guaranteed, deposits anywhere</div>
+    </div>
+    <div class="e-item">
+      <div class="e-label">Aspen lending net</div>
+      <div class="e-val pos">$1,500</div>
+      <div class="e-note">your 16% share of $50K note</div>
+    </div>
+    <div class="e-item">
+      <div class="e-label">Side hustle</div>
+      <div class="e-val pos">$3,000</div>
+      <div class="e-note">you + Sara combined</div>
+    </div>
+    <div class="e-item">
+      <div class="e-label">Rent received</div>
+      <div class="e-val pos">$4,500</div>
+      <div class="e-note">tenant covering your mortgage</div>
+    </div>
+    <div class="e-item highlight">
+      <div class="e-label">Total monthly in</div>
+      <div class="e-val pos">$14,817</div>
+      <div class="e-note">per month in Europe</div>
+    </div>
+    <div class="e-item" style="border-color:#d94040;">
+      <div class="e-label">Total monthly out</div>
+      <div class="e-val neg">$13,042</div>
+      <div class="e-note">all costs including mortgage</div>
+    </div>
+    <div class="e-item highlight-warn" style="grid-column: span 2;">
+      <div class="e-label">Monthly net · Annual total · What you keep</div>
+      <div class="e-val warn">+$1,775/mo · $21,300/yr</div>
+      <div class="e-note">Slim but positive. You return to a house worth ~$280K in equity. No rebuying. Stability for the kids.</div>
+    </div>
+  </div>
+</div>
+
+<div class="footnote">
+  <strong>How year-1 values are calculated:</strong> CFD = down payment received + 1yr lending income (16% on deployed capital) + equity note income + value of 12mo mortgage freed from your obligation. Traditional = net proceeds + 1yr lending income (16% on proceeds) + 12mo mortgage freed. Rent = 12-month actual cash surplus only (does not count equity built or appreciation). All figures assume $270K–$280K down deployed immediately at 16% interest-only. Mortgage freed = $5,706 × 12 = $68,472/yr in obligation removed.
+</div>
+
+</body>
+</html>

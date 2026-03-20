@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life In Europe — Monthly Cash Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a0a09; --bg2: #161614; --bg3: #1e1e1c;
+  --border: #2a2a26; --border2: rgba(255,255,255,0.14);
+  --text: #f0f0ea; --text2: #c8c8c0; --text3: #8a9ab0;
+  --green: #1a9e60; --green-hi: #3dd68c;
+  --red: #d94040; --amber: #e09020; --blue: #4a9ef5; --purple: #9b6ef5;
+  --teal: #1ab8a0;
+}
+body { font-family:'Syne',sans-serif; background:var(--bg); color:var(--text); padding:2.5rem 1.75rem 5rem; max-width:860px; margin:0 auto; line-height:1.5; }
+
+.headline { font-family:'Instrument Serif',serif; font-size:34px; font-weight:400; color:var(--text); letter-spacing:-0.02em; line-height:1.2; margin-bottom:4px; }
+.headline em { font-style:italic; color:#c8b89a; }
+.sub { font-size:12px; color:var(--text3); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:2rem; }
+
+/* TABS */
+.tabs { display:flex; gap:6px; margin-bottom:2rem; flex-wrap:wrap; }
+.tab { font-family:'Syne',sans-serif; font-size:11px; font-weight:600; padding:7px 16px; border:1px solid var(--border); border-radius:99px; background:transparent; color:var(--text3); cursor:pointer; letter-spacing:0.04em; transition:all 0.12s; white-space:nowrap; }
+.tab:hover { color:var(--text2); border-color:#444; }
+.tab.active { background:var(--text); color:#0a0a09; border-color:var(--text); }
+.panel { display:none; }
+.panel.active { display:block; }
+
+/* HERO BLOCK */
+.net-hero { background:var(--bg2); border:1px solid var(--border); border-top:3px solid var(--green-hi); border-radius:16px; padding:1.75rem; margin-bottom:1.5rem; display:flex; align-items:flex-start; justify-content:space-between; gap:1.5rem; }
+.net-hero-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:8px; }
+.net-hero-desc { font-size:14px; color:var(--text2); line-height:1.7; max-width:340px; }
+.net-hero-right { text-align:right; flex-shrink:0; }
+.net-hero-number { font-family:'Instrument Serif',serif; font-size:62px; letter-spacing:-0.02em; line-height:1; color:var(--green-hi); }
+.net-hero-per { font-size:13px; color:#3d8060; margin-top:4px; }
+
+/* CATEGORY HEADERS */
+.cat-header { display:flex; align-items:center; gap:10px; margin:2rem 0 1rem; }
+.cat-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; padding:4px 14px; border-radius:99px; white-space:nowrap; }
+.cat-label.income  { background:#0a2018; color:var(--green-hi); }
+.cat-label.compare { background:#0d1e30; color:var(--blue); }
+.cat-label.balloon { background:#251800; color:var(--amber); }
+.cat-label.summary { background:#1e1e1c; color:#888; }
+.cat-label.teal    { background:#081e1c; color:var(--teal); }
+.cat-label.purple  { background:#1a0e28; color:var(--purple); }
+.cat-line { flex:1; height:0.5px; background:var(--border); }
+
+/* ACCOMMODATION CARDS */
+.grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:1.5rem; }
+.a-card { border:1px solid var(--border); border-radius:14px; padding:1rem; background:var(--bg2); text-align:center; transition:transform 0.15s; }
+.a-card:hover { transform:translateY(-2px); }
+.a-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:5px; }
+.a-budget { font-size:13px; color:var(--text2); margin-bottom:7px; }
+.a-surplus { font-family:'Instrument Serif',serif; font-size:28px; color:var(--green-hi); line-height:1; }
+.a-sub { font-size:12px; color:var(--text3); margin-top:4px; }
+
+/* TWO COL */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:1.5rem; }
+
+/* STANDARD CARDS */
+.s-card { border:1px solid var(--border); border-radius:14px; padding:1.25rem; background:var(--bg2); transition:transform 0.15s; }
+.s-card:hover { transform:translateY(-2px); }
+.s-card.green-top { border-top:3px solid var(--green-hi); }
+.s-card.red-top   { border-top:3px solid var(--red); }
+.s-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:5px; }
+.s-total { font-family:'Instrument Serif',serif; font-size:24px; color:var(--text); margin-bottom:1rem; line-height:1; }
+.s-total.green { color:var(--green-hi); } .s-total.red { color:var(--red); }
+
+.divider { height:0.5px; background:var(--border); margin:0.65rem 0; }
+.row { display:flex; justify-content:space-between; font-size:13px; color:var(--text2); margin:5px 0; gap:8px; }
+.row .val { font-weight:700; text-align:right; white-space:nowrap; }
+.pos  { color:var(--green-hi); }
+.neg  { color:var(--red); }
+.warn { color:var(--amber); }
+.blue { color:var(--blue); }
+.teal { color:var(--teal); }
+.purple { color:var(--purple); }
+.neutral { color:var(--text); }
+
+/* OPTION CARDS */
+.opt-card { border:1px solid var(--border); border-radius:14px; padding:1.25rem; background:var(--bg2); transition:transform 0.15s; }
+.opt-card:hover { transform:translateY(-2px); }
+.opt-card.best  { border:2px solid var(--green); }
+.opt-card.mid   { border:2px solid var(--amber); }
+.opt-card.split { border:2px solid var(--blue); }
+.opt-tag { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
+.opt-tag.green { color:var(--green-hi); } .opt-tag.amber { color:var(--amber); } .opt-tag.blue { color:var(--blue); }
+.opt-name { font-family:'Instrument Serif',serif; font-size:20px; color:var(--text); line-height:1.2; margin-bottom:0.875rem; }
+.opt-monthly { font-family:'Instrument Serif',serif; font-size:38px; line-height:1; margin-bottom:3px; }
+.opt-monthly.green { color:var(--green-hi); } .opt-monthly.amber { color:var(--amber); } .opt-monthly.blue { color:var(--blue); }
+.opt-sub { font-size:12px; color:var(--text3); margin-bottom:0.875rem; }
+
+/* BALLOON */
+.balloon-card { background:var(--bg2); border:1px solid var(--border); border-top:3px solid var(--amber); border-radius:14px; padding:1.25rem 1.5rem; margin-bottom:1.5rem; }
+.balloon-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:1rem; }
+.balloon-row { display:flex; justify-content:space-between; align-items:flex-start; padding:10px 0; border-bottom:0.5px solid var(--border); gap:14px; }
+.balloon-row:last-child { border-bottom:none; }
+.balloon-label { font-size:13px; color:var(--text2); flex:1; line-height:1.5; }
+.balloon-val { font-family:'Instrument Serif',serif; font-size:24px; line-height:1; white-space:nowrap; }
+
+/* SUMMARY TABLE */
+.summary-block { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:1.25rem 1.5rem; margin-bottom:1.5rem; }
+.srow { display:flex; justify-content:space-between; align-items:baseline; padding:9px 0; border-bottom:0.5px solid var(--border); gap:12px; }
+.srow:last-child { border-bottom:none; }
+.srow-label { font-size:14px; color:var(--text2); }
+.srow-val { font-family:'Instrument Serif',serif; font-size:22px; line-height:1; white-space:nowrap; }
+
+/* ANNUAL */
+.annual-block { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:1.25rem 1.5rem; margin-bottom:1.5rem; }
+.annual-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:12px; }
+.annual-row { display:flex; justify-content:space-between; align-items:baseline; padding:6px 0; border-bottom:0.5px solid var(--border); font-size:14px; }
+.annual-row:last-child { border-bottom:none; padding-top:10px; }
+.annual-label { color:var(--text2); }
+.annual-val { font-family:'Instrument Serif',serif; font-weight:400; }
+.annual-val.g { color:var(--green-hi); }
+
+/* SCENARIO HIGHLIGHT CARD */
+.scenario-hero { background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.5rem; }
+.scenario-hero.green { border-top:3px solid var(--green-hi); }
+.scenario-hero.teal  { border-top:3px solid var(--teal); }
+.scenario-hero.purple { border-top:3px solid var(--purple); }
+.sh-eyebrow { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:6px; }
+.sh-title { font-family:'Instrument Serif',serif; font-size:26px; color:var(--text); margin-bottom:0.875rem; line-height:1.2; }
+.sh-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:1.25rem; }
+.sh-stat { background:var(--bg3); border-radius:10px; padding:0.875rem; }
+.sh-stat-label { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; font-weight:600; }
+.sh-stat-val { font-family:'Instrument Serif',serif; font-size:26px; line-height:1; }
+.sh-stat-note { font-size:12px; color:var(--text3); margin-top:3px; }
+
+.footnote { font-size:13px; color:var(--text2); line-height:1.7; padding:0.875rem 1rem; border-left:2px solid var(--border2); margin-top:1.5rem; }
+
+@media(max-width:580px) {
+  .grid3,.two-col,.sh-grid { grid-template-columns:1fr; }
+  .net-hero { flex-direction:column; }
+  .net-hero-right { text-align:left; }
+  .net-hero-number { font-size:48px; }
+  .headline { font-size:26px; }
+}
+</style>
+</head>
+<body>
+
+<div class="headline">Life In Europe</div>
+<div class="sub">Monthly cash flow · Wes income only · Sara free · No mortgage · No CC debt</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('overview')">Overview</button>
+  <button class="tab" onclick="show('compare300')">$300K Home Sale</button>
+  <button class="tab" onclick="show('compare200')">$200K Home Sale</button>
+  <button class="tab" onclick="show('k106')">+ $106K Deployed</button>
+  <button class="tab" onclick="show('hustle')">+ Side Hustle</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+     OVERVIEW TAB
+     ═══════════════════════════════════════ -->
+<div class="panel active" id="panel-overview">
+
+  <div class="net-hero">
+    <div>
+      <div class="net-hero-label">Available each month — $300K Option A (best monthly)</div>
+      <div class="net-hero-desc">Before food and accommodation. Your floor. Subtract whatever you spend on where you live and what you eat. Every single month, indefinitely. Principal stays intact — you are spending interest only.</div>
+    </div>
+    <div class="net-hero-right">
+      <div class="net-hero-number">$10,947</div>
+      <div class="net-hero-per">per month · every month</div>
+    </div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label income">After food + housing</span><div class="cat-line"></div></div>
+  <div class="grid3">
+    <div class="a-card"><div class="a-label">Budget travel</div><div class="a-budget">$3,000/mo food + housing</div><div class="a-surplus">+$7,947</div><div class="a-sub">banked every month</div></div>
+    <div class="a-card"><div class="a-label">Comfortable</div><div class="a-budget">$4,500/mo food + housing</div><div class="a-surplus">+$6,447</div><div class="a-sub">banked every month</div></div>
+    <div class="a-card"><div class="a-label">Generous</div><div class="a-budget">$6,000/mo food + housing</div><div class="a-surplus">+$4,947</div><div class="a-sub">banked every month</div></div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label income">Income vs. Fixed Expenses</span><div class="cat-line"></div></div>
+  <div class="two-col">
+    <div class="s-card green-top">
+      <div class="s-label">Monthly income</div>
+      <div class="s-total green">$12,966</div>
+      <div class="row"><span>CalPERS pension</span><span class="val pos">$5,933</span></div>
+      <div class="row"><span>$300K lent at 16%</span><span class="val pos">$4,000</span></div>
+      <div class="row"><span>$115K lent at 16%</span><span class="val pos">$1,533</span></div>
+      <div class="row"><span>Aspen Pines net (re-upped)</span><span class="val pos">$1,500</span></div>
+      <div class="divider"></div>
+      <div class="row"><span>Pension share of income</span><span class="val neutral">46%</span></div>
+      <div class="row"><span>Lending share of income</span><span class="val neutral">54%</span></div>
+    </div>
+    <div class="s-card red-top">
+      <div class="s-label">Fixed expenses</div>
+      <div class="s-total red">$2,019</div>
+      <div class="row"><span>Child support</span><span class="val neg">$883</span></div>
+      <div class="row"><span>Bear loan repayment</span><span class="val neg">$500</span></div>
+      <div class="row"><span>T-Mobile (family)</span><span class="val neg">$205</span></div>
+      <div class="row"><span>Guardian insurance</span><span class="val neg">$111</span></div>
+      <div class="row"><span>Subscriptions</span><span class="val neg">$100</span></div>
+      <div class="row"><span>Kids activities</span><span class="val neg">$100</span></div>
+      <div class="row"><span>Gas / transport</span><span class="val neg">$120</span></div>
+    </div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label summary">Annual picture — $300K Option A · $4,500/mo food + housing</span><div class="cat-line"></div></div>
+  <div class="annual-block">
+    <div class="annual-row"><span class="annual-label">Annual income</span><span class="annual-val g">$155,592</span></div>
+    <div class="annual-row"><span class="annual-label">Annual fixed expenses</span><span class="annual-val">$24,228</span></div>
+    <div class="annual-row"><span class="annual-label">Annual food + housing ($4,500 × 12)</span><span class="annual-val">$54,000</span></div>
+    <div class="annual-row"><span class="annual-label">Total annual outflow</span><span class="annual-val">$78,228</span></div>
+    <div class="annual-row" style="margin-top:4px;"><span class="annual-label" style="font-size:15px;color:var(--text);font-weight:600;">Banked over 12 months in Europe</span><span class="annual-val g" style="font-size:32px;">+$77,364</span></div>
+  </div>
+
+  <div class="footnote">All lending principal stays intact — you are spending interest only. The $415K deployed ($300K + $115K) keeps earning indefinitely. Bear loan is a spread play: you pay 10%, earn 16% on that same capital, net 6%. Aspen Pines is re-upped so income stays constant with no maturity risk. CPA continues during Europe — kept in for accuracy.</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     $300K HOME SALE TAB
+     ═══════════════════════════════════════ -->
+<div class="panel" id="panel-compare300">
+
+  <div class="cat-header"><span class="cat-label compare">Three ways to deploy $300K from the home sale</span><div class="cat-line"></div></div>
+
+  <div class="grid3">
+    <div class="opt-card best">
+      <div class="opt-tag green">Option A · Best monthly cash</div>
+      <div class="opt-name">All debt at 16%</div>
+      <div class="opt-monthly green">$4,000</div>
+      <div class="opt-sub">per month from $300K</div>
+      <div class="divider"></div>
+      <div class="row"><span>Annual income</span><span class="val pos">$48,000</span></div>
+      <div class="row"><span>Total income/mo</span><span class="val pos">$12,966</span></div>
+      <div class="row"><span>Floor before living</span><span class="val pos">$10,947</span></div>
+      <div class="row"><span>Surplus at $4,500</span><span class="val pos">+$6,447</span></div>
+      <div class="row"><span>Banked in 12 months</span><span class="val pos">$77,364</span></div>
+      <div class="divider"></div>
+      <div class="row"><span>Month 24 return</span><span class="val pos">$300,000</span></div>
+    </div>
+    <div class="opt-card mid">
+      <div class="opt-tag amber">Option B · Best total return</div>
+      <div class="opt-name">All equity 8% pref / 20% total</div>
+      <div class="opt-monthly amber">$2,000</div>
+      <div class="opt-sub">per month from $300K</div>
+      <div class="divider"></div>
+      <div class="row"><span>Annual pref income</span><span class="val warn">$24,000</span></div>
+      <div class="row"><span>Total income/mo</span><span class="val warn">$10,966</span></div>
+      <div class="row"><span>Floor before living</span><span class="val warn">$8,947</span></div>
+      <div class="row"><span>Surplus at $4,500</span><span class="val warn">+$4,447</span></div>
+      <div class="row"><span>Banked in 12 months</span><span class="val warn">$53,364</span></div>
+      <div class="divider"></div>
+      <div class="row"><span>Month 24 balloon</span><span class="val warn">$372,000</span></div>
+    </div>
+    <div class="opt-card split">
+      <div class="opt-tag blue">Option C · Balanced hedge</div>
+      <div class="opt-name">Split 50/50 $150K each</div>
+      <div class="opt-monthly blue">$3,000</div>
+      <div class="opt-sub">per month from $300K</div>
+      <div class="divider"></div>
+      <div class="row"><span>Annual income</span><span class="val blue">$36,000</span></div>
+      <div class="row"><span>Total income/mo</span><span class="val blue">$11,966</span></div>
+      <div class="row"><span>Floor before living</span><span class="val blue">$9,947</span></div>
+      <div class="row"><span>Surplus at $4,500</span><span class="val blue">+$5,447</span></div>
+      <div class="row"><span>Banked in 12 months</span><span class="val blue">$65,364</span></div>
+      <div class="divider"></div>
+      <div class="row"><span>Month 24 return</span><span class="val blue">$336,000</span></div>
+    </div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label balloon">What hits at month 24 — $300K sale</span><div class="cat-line"></div></div>
+  <div class="balloon-card">
+    <div class="balloon-title">Principal back plus any equity kicker</div>
+    <div class="balloon-row"><div class="balloon-label"><strong style="color:var(--green-hi);">Option A:</strong> $300K principal returned. Redeploy at 16% immediately — back to $4,000/mo within days.</div><div class="balloon-val pos">$300,000</div></div>
+    <div class="balloon-row"><div class="balloon-label"><strong style="color:var(--amber);">Option B:</strong> $300K principal + $72K kicker. The $72K bridges the gap between 8% pref paid and 20% total owed over 2 years.</div><div class="balloon-val warn">$372,000</div></div>
+    <div class="balloon-row"><div class="balloon-label"><strong style="color:var(--blue);">Option C:</strong> $150K from debt maturity + $186K from equity half ($150K principal + $36K kicker).</div><div class="balloon-val blue">$336,000</div></div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label summary">Monthly surplus at $4,500/mo food + housing</span><div class="cat-line"></div></div>
+  <div class="summary-block">
+    <div class="srow"><span class="srow-label">Option A — all debt at 16%</span><span class="srow-val pos">+$6,447/mo · $77,364/yr</span></div>
+    <div class="srow"><span class="srow-label">Option B — all equity 8% / 20% total</span><span class="srow-val warn">+$4,447/mo · $53,364/yr</span></div>
+    <div class="srow"><span class="srow-label">Option C — split 50/50</span><span class="srow-val blue">+$5,447/mo · $65,364/yr</span></div>
+  </div>
+
+  <div class="footnote"><strong>The tradeoff:</strong> Option A wins if you want the most cash while traveling — $2,000/mo more than B every month. Option B wins if you want the biggest lump sum when you return — $72K more at month 24. Option C splits the difference. All three leave principal intact. It is purely a cash flow vs. lump sum preference.</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     $200K HOME SALE TAB
+     ═══════════════════════════════════════ -->
+<div class="panel" id="panel-compare200">
+
+  <div class="cat-header"><span class="cat-label teal">Three ways to deploy $200K from the home sale</span><div class="cat-line"></div></div>
+
+  <div class="grid3">
+    <div class="opt-card best">
+      <div class="opt-tag green">Option A · Best monthly cash</div>
+      <div class="opt-name">All debt at 16%</div>
+      <div class="opt-monthly green">$2,667</div>
+      <div class="opt-sub">per month from $200K</div>
+      <div class="divider"></div>
+      <div class="row"><span>Annual income</span><span class="val pos">$32,000</span></div>
+      <div class="row"><span>Total income/mo</span><span class="val pos">$11,633</span></div>
+      <div class="row"><span>Floor before living</span><span class="val pos">$9,614</span></div>
+      <div class="row"><span>Surplus at $4,500</span><span class="val pos">+$5,114</span></div>
+      <div class="row"><span>Banked in 12 months</span><span class="val pos">$61,368</span></div>
+      <div class="divider"></div>
+      <div class="row"><span>Month 24 return</span><span class="val pos">$200,000</span></div>
+    </div>
+    <div class="opt-card mid">
+      <div class="opt-tag amber">Option B · Best total return</div>
+      <div class="opt-name">All equity 8% pref / 20% total</div>
+      <div class="opt-monthly amber">$1,333</div>
+      <div class="opt-sub">per month from $200K</div>
+      <div class="divider"></div>
+      <div class="row"><span>Annual pref income</span><span class="val warn">$16,000</span></div>
+      <div class="row"><span>Total income/mo</span><span class="val warn">$10,299</span></div>
+      <div class="row"><span>Floor before living</span><span class="val warn">$8,280</span></div>
+      <div class="row"><span>Surplus at $4,500</span><span class="val warn">+$3,780</span></div>
+      <div class="row"><span>Banked in 12 months</span><span class="val warn">$45,360</span></div>
+      <div class="divider"></div>
+      <div class="row"><span>Month 24 balloon</span><span class="val warn">$248,008</span></div>
+    </div>
+    <div class="opt-card split">
+      <div class="opt-tag blue">Option C · Balanced hedge</div>
+      <div class="opt-name">Split 50/50 $100K each</div>
+      <div class="opt-monthly blue">$2,000</div>
+      <div class="opt-sub">per month from $200K</div>
+      <div class="divider"></div>
+      <div class="row"><span>Annual income</span><span class="val blue">$24,000</span></div>
+      <div class="row"><span>Total income/mo</span><span class="val blue">$10,966</span></div>
+      <div class="row"><span>Floor before living</span><span class="val blue">$8,947</span></div>
+      <div class="row"><span>Surplus at $4,500</span><span class="val blue">+$4,447</span></div>
+      <div class="row"><span>Banked in 12 months</span><span class="val blue">$53,364</span></div>
+      <div class="divider"></div>
+      <div class="row"><span>Month 24 return</span><span class="val blue">$223,992</span></div>
+    </div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label balloon">What hits at month 24 — $200K sale</span><div class="cat-line"></div></div>
+  <div class="balloon-card">
+    <div class="balloon-title">Principal back plus any equity kicker</div>
+    <div class="balloon-row"><div class="balloon-label"><strong style="color:var(--green-hi);">Option A:</strong> $200K principal returned. Redeploy immediately at 16% for $2,667/mo.</div><div class="balloon-val pos">$200,000</div></div>
+    <div class="balloon-row"><div class="balloon-label"><strong style="color:var(--amber);">Option B:</strong> $200K principal + $48K kicker (20% × 2yrs minus 8% pref already collected).</div><div class="balloon-val warn">$248,008</div></div>
+    <div class="balloon-row"><div class="balloon-label"><strong style="color:var(--blue);">Option C:</strong> $100K from debt + $124K from equity ($100K principal + $24K kicker).</div><div class="balloon-val blue">$223,992</div></div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label summary">$200K vs $300K — monthly surplus comparison at $4,500</span><div class="cat-line"></div></div>
+  <div class="summary-block">
+    <div class="srow"><span class="srow-label">$300K Option A — all debt 16%</span><span class="srow-val pos">+$6,447/mo · $77,364/yr</span></div>
+    <div class="srow"><span class="srow-label">$200K Option A — all debt 16%</span><span class="srow-val teal">+$5,114/mo · $61,368/yr</span></div>
+    <div class="srow"><span class="srow-label">Difference between $300K and $200K</span><span class="srow-val warn">-$1,333/mo · -$15,996/yr</span></div>
+  </div>
+
+  <div class="footnote">The $200K scenario is still very comfortable — $5,114/mo surplus at a $4,500 living budget means you're banking over $61K during the year in Europe. The $1,333/mo difference vs the $300K scenario is meaningful but not life-changing. If the house sells for less, the trip still works cleanly.</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     $106K DEPLOYED TAB
+     ═══════════════════════════════════════ -->
+<div class="panel" id="panel-k106">
+
+  <div class="scenario-hero green">
+    <div class="sh-eyebrow">Scenario — $106K capital returned and redeployed at 16%</div>
+    <div class="sh-title">$106K comes back end of year — lend it at 16%</div>
+    <div class="sh-grid">
+      <div class="sh-stat">
+        <div class="sh-stat-label">Added monthly income</div>
+        <div class="sh-stat-val pos">+$1,413</div>
+        <div class="sh-stat-note">$106K × 16% ÷ 12</div>
+      </div>
+      <div class="sh-stat">
+        <div class="sh-stat-label">New floor (with $300K A)</div>
+        <div class="sh-stat-val pos">$12,360</div>
+        <div class="sh-stat-note">before food + housing</div>
+      </div>
+      <div class="sh-stat">
+        <div class="sh-stat-label">Surplus at $4,500</div>
+        <div class="sh-stat-val pos">+$7,860</div>
+        <div class="sh-stat-note">per month</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label income">Updated income with $106K deployed</span><div class="cat-line"></div></div>
+  <div class="s-card green-top">
+    <div class="s-label">Monthly income — $300K Option A + $106K</div>
+    <div class="s-total green">$14,379</div>
+    <div class="row"><span>CalPERS pension</span><span class="val pos">$5,933</span></div>
+    <div class="row"><span>$300K lent at 16% (home sale)</span><span class="val pos">$4,000</span></div>
+    <div class="row"><span>$115K lent at 16%</span><span class="val pos">$1,533</span></div>
+    <div class="row"><span>Aspen Pines net (re-upped)</span><span class="val pos">$1,500</span></div>
+    <div class="row"><span>$106K lent at 16% (returned capital)</span><span class="val pos">$1,413</span></div>
+    <div class="divider"></div>
+    <div class="row" style="font-size:15px;padding-top:4px;"><span style="color:var(--text);font-weight:600;">Total monthly income</span><span class="val pos" style="font-family:'Instrument Serif',serif;font-size:22px;">$14,379</span></div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label summary">Before vs. after $106K deployed</span><div class="cat-line"></div></div>
+  <div class="summary-block">
+    <div class="srow"><span class="srow-label">Floor before $106K (at $300K Option A)</span><span class="srow-val neutral">$10,947/mo</span></div>
+    <div class="srow"><span class="srow-label">Floor after $106K deployed</span><span class="srow-val pos">$12,360/mo</span></div>
+    <div class="srow"><span class="srow-label">Surplus at $4,500 before</span><span class="srow-val neutral">+$6,447/mo</span></div>
+    <div class="srow"><span class="srow-label">Surplus at $4,500 after</span><span class="srow-val pos">+$7,860/mo</span></div>
+    <div class="srow"><span class="srow-label">Extra banked over 12 months</span><span class="srow-val pos">+$16,956</span></div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label balloon">Accommodation scenarios with $106K added</span><div class="cat-line"></div></div>
+  <div class="grid3">
+    <div class="a-card"><div class="a-label">Budget travel</div><div class="a-budget">$3,000/mo food + housing</div><div class="a-surplus">+$9,360</div><div class="a-sub">banked every month</div></div>
+    <div class="a-card"><div class="a-label">Comfortable</div><div class="a-budget">$4,500/mo food + housing</div><div class="a-surplus">+$7,860</div><div class="a-sub">banked every month</div></div>
+    <div class="a-card"><div class="a-label">Generous</div><div class="a-budget">$6,000/mo food + housing</div><div class="a-surplus">+$6,360</div><div class="a-sub">banked every month</div></div>
+  </div>
+
+  <div class="footnote">This capital returning end of year means the $106K is not available from day one of Europe — it arrives mid-trip. From that point forward the income jumps $1,413/mo for the remainder of the trip and all future months. The annual total above assumes it lands on month 6 of a 12-month trip, giving you 6 months at the new rate.</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     SIDE HUSTLE TAB
+     ═══════════════════════════════════════ -->
+<div class="panel" id="panel-hustle">
+
+  <div class="scenario-hero purple">
+    <div class="sh-eyebrow">Scenario — $2,000/mo side hustle · 5 hrs/week · from anywhere</div>
+    <div class="sh-title">Deal reviews + Sara async contracts — a little extra without the grind</div>
+    <div class="sh-grid">
+      <div class="sh-stat">
+        <div class="sh-stat-label">Added monthly income</div>
+        <div class="sh-stat-val purple">+$2,000</div>
+        <div class="sh-stat-note">combined Wes + Sara</div>
+      </div>
+      <div class="sh-stat">
+        <div class="sh-stat-label">New floor (with $300K A)</div>
+        <div class="sh-stat-val purple">$12,947</div>
+        <div class="sh-stat-note">before food + housing</div>
+      </div>
+      <div class="sh-stat">
+        <div class="sh-stat-label">Surplus at $4,500</div>
+        <div class="sh-stat-val purple">+$8,447</div>
+        <div class="sh-stat-note">per month</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label purple">Updated income with side hustle</span><div class="cat-line"></div></div>
+  <div class="s-card" style="border-top:3px solid var(--purple);">
+    <div class="s-label">Monthly income — $300K Option A + side hustle</div>
+    <div class="s-total" style="color:var(--purple);">$14,966</div>
+    <div class="row"><span>CalPERS pension</span><span class="val pos">$5,933</span></div>
+    <div class="row"><span>$300K lent at 16%</span><span class="val pos">$4,000</span></div>
+    <div class="row"><span>$115K lent at 16%</span><span class="val pos">$1,533</span></div>
+    <div class="row"><span>Aspen Pines net</span><span class="val pos">$1,500</span></div>
+    <div class="row"><span>Side hustle (deal reviews + Sara async)</span><span class="val purple">$2,000</span></div>
+    <div class="divider"></div>
+    <div class="row" style="font-size:15px;padding-top:4px;"><span style="color:var(--text);font-weight:600;">Total monthly income</span><span class="val purple" style="font-family:'Instrument Serif',serif;font-size:22px;">$14,966</span></div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label summary">All scenarios compared — surplus at $4,500/mo living</span><div class="cat-line"></div></div>
+  <div class="summary-block">
+    <div class="srow"><span class="srow-label">$300K Option A — baseline</span><span class="srow-val pos">+$6,447/mo · $77,364/yr</span></div>
+    <div class="srow"><span class="srow-label">$200K Option A — smaller sale</span><span class="srow-val teal">+$5,114/mo · $61,368/yr</span></div>
+    <div class="srow"><span class="srow-label">+ $106K deployed (mid-trip)</span><span class="srow-val pos">+$7,860/mo · $94,320/yr</span></div>
+    <div class="srow"><span class="srow-label">+ Side hustle $2K/mo added</span><span class="srow-val purple">+$8,447/mo · $101,364/yr</span></div>
+    <div class="srow" style="padding-top:12px;"><span class="srow-label" style="font-size:15px;color:var(--text);font-weight:600;">Best case — $300K + $106K + hustle</span><span class="srow-val pos" style="font-size:28px;">+$9,860/mo</span></div>
+  </div>
+
+  <div class="cat-header"><span class="cat-label balloon">Accommodation scenarios with side hustle</span><div class="cat-line"></div></div>
+  <div class="grid3">
+    <div class="a-card"><div class="a-label">Budget travel</div><div class="a-budget">$3,000/mo food + housing</div><div class="a-surplus" style="color:var(--purple);">+$9,947</div><div class="a-sub">banked every month</div></div>
+    <div class="a-card"><div class="a-label">Comfortable</div><div class="a-budget">$4,500/mo food + housing</div><div class="a-surplus" style="color:var(--purple);">+$8,447</div><div class="a-sub">banked every month</div></div>
+    <div class="a-card"><div class="a-label">Generous</div><div class="a-budget">$6,000/mo food + housing</div><div class="a-surplus" style="color:var(--purple);">+$6,947</div><div class="a-sub">banked every month</div></div>
+  </div>
+
+  <div class="footnote">At $2,000/mo combined from deal reviews and Sara's async contract work — roughly 8 deal reviews at $250 each, or one small retainer client for Sara — the trip becomes almost incomprehensibly comfortable. You'd be banking nearly $100K during a 12-month trip. The hustle income is the insurance policy: even at $6,000/mo accommodation you're still banking $6,947 every month.</div>
+
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

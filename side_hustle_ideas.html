@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Side Hustle Ideas</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Syne', sans-serif; background: #0a0a09; color: #e8e8e2; padding: 2.5rem 1.75rem 5rem; max-width: 820px; margin: 0 auto; line-height: 1.5; }
+
+  .headline { font-family: 'Instrument Serif', serif; font-size: 34px; font-weight: 400; color: #f0f0ea; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 4px; }
+  .headline em { font-style: italic; color: #c8b89a; }
+  .sub { font-size: 11px; color: #686860; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .intro { font-size: 14px; color: #a0a098; line-height: 1.7; max-width: 580px; margin-bottom: 2.5rem; border-left: 2px solid #252522; padding-left: 14px; }
+
+  .cat-header { display: flex; align-items: center; gap: 10px; margin: 2.5rem 0 1.25rem; }
+  .cat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 14px; border-radius: 99px; white-space: nowrap; }
+  .cat-label.wes  { background: #0d1e30; color: #5aaaf0; }
+  .cat-label.sara { background: #1a0e28; color: #c084f5; }
+  .cat-label.both { background: #0a2018; color: #3dd68c; }
+  .cat-line { flex: 1; height: 0.5px; background: #252522; }
+
+  .idea-card { background: #161614; border: 1px solid #2a2a26; border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; position: relative; overflow: hidden; transition: transform 0.15s, box-shadow 0.15s; }
+  .idea-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.2); }
+  .idea-card.wes-card  { border-top: 3px solid #4a9ef5; }
+  .idea-card.sara-card { border-top: 3px solid #c084f5; }
+  .idea-card.highlight { outline: 2px solid #1a9e60; outline-offset: -1px; }
+
+  .best-tag { position: absolute; top: 14px; right: 14px; background: #1a9e60; color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; }
+  .start-tag { position: absolute; top: 14px; right: 14px; background: #4a9ef5; color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; }
+
+  .idea-name { font-family: 'Instrument Serif', serif; font-size: 22px; color: #f0f0ea; margin-bottom: 4px; line-height: 1.2; padding-right: 110px; }
+  .idea-tagline { font-size: 11px; color: #686860; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 1rem; }
+  .idea-desc { font-size: 13px; color: #a0a098; line-height: 1.7; margin-bottom: 1.25rem; }
+
+  .stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .stat { background: #0f0f0e; border: 1px solid #252522; border-radius: 10px; padding: 0.625rem 0.875rem; flex: 1; min-width: 110px; }
+  .stat-label { font-size: 9px; color: #585852; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+  .stat-val { font-family: 'Instrument Serif', serif; font-size: 20px; line-height: 1; }
+  .stat-val.green  { color: #1a9e60; }
+  .stat-val.blue   { color: #4a9ef5; }
+  .stat-val.purple { color: #c084f5; }
+  .stat-note { font-size: 10px; color: #585852; margin-top: 2px; }
+
+  .how-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #585852; margin-bottom: 6px; }
+  .how-steps { display: flex; gap: 8px; flex-wrap: wrap; }
+  .step { background: #0f0f0e; border: 1px solid #252522; border-radius: 8px; padding: 6px 12px; font-size: 11px; color: #888880; display: flex; align-items: center; gap: 6px; }
+  .step-num { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; }
+  .step-num.blue   { background: #0d1e30; color: #4a9ef5; }
+  .step-num.purple { background: #1a0e28; color: #c084f5; }
+
+  .summary-card { background: #111110; border: 1px solid #2a2a26; border-top: 3px solid #1a9e60; border-radius: 16px; padding: 1.75rem; margin-top: 2.5rem; }
+  .summary-title { font-family: 'Instrument Serif', serif; font-size: 24px; color: #f0f0ea; margin-bottom: 1.25rem; }
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+  .sum-block { background: #161614; border: 1px solid #252522; border-radius: 12px; padding: 1rem; }
+  .sum-block-label { font-size: 9px; color: #585852; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .sum-block-name { font-size: 13px; color: #c8c8c0; margin-bottom: 4px; font-weight: 600; }
+  .sum-block-val { font-family: 'Instrument Serif', serif; font-size: 26px; line-height: 1; }
+  .sum-block-val.green  { color: #1a9e60; }
+  .sum-block-val.blue   { color: #4a9ef5; }
+  .sum-block-val.purple { color: #c084f5; }
+  .sum-block-note { font-size: 10px; color: #585852; margin-top: 3px; }
+
+  .total-row { display: flex; justify-content: space-between; align-items: baseline; padding: 1rem 0 0; border-top: 1px solid #252522; gap: 1rem; }
+  .total-label { font-size: 11px; color: #686860; text-transform: uppercase; letter-spacing: 0.08em; }
+  .total-note { font-size: 11px; color: #585852; margin-top: 3px; max-width: 380px; line-height: 1.5; }
+  .total-val { font-family: 'Instrument Serif', serif; font-size: 42px; color: #1a9e60; line-height: 1; white-space: nowrap; }
+
+  .footnote { font-size: 11px; color: #585852; line-height: 1.7; margin-top: 1.5rem; padding: 0.875rem 1rem; border-left: 2px solid #252522; }
+
+  @media (max-width: 580px) {
+    .stats { flex-direction: column; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .idea-name { padding-right: 0; }
+    .best-tag, .start-tag { position: static; display: inline-block; margin-bottom: 8px; }
+    .total-row { flex-direction: column; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sub">Grant Family · Side Income · Europe-ready · Low hours</div>
+<div class="headline">A Little Extra,<br><em>Without the Grind</em></div>
+<div class="intro">Two ideas for Wes, two for Sara — all built around your actual lives. None of these require quitting anything, hiring anyone, or working nights. They run from Europe just as well as Cave Creek.</div>
+
+<!-- WES -->
+<div class="cat-header">
+  <span class="cat-label wes">Wes — Private Lending</span>
+  <div class="cat-line"></div>
+</div>
+
+<div class="idea-card wes-card highlight">
+  <div class="start-tag">Start this week</div>
+  <div class="idea-name">The Deal Review</div>
+  <div class="idea-tagline">Async · No schedule · Launch in days</div>
+  <div class="idea-desc">Aspiring private lenders submit a deal — you review it on Loom or video and send it back within 48 hours. No cohort, no live calls, no students to manage. You do it when you want, from anywhere. You've done hundreds of these in your head for free. Now you charge for it.</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Per review</div><div class="stat-val blue">$150–300</div><div class="stat-note">per deal submitted</div></div>
+    <div class="stat"><div class="stat-label">Time per review</div><div class="stat-val blue">20–30 min</div><div class="stat-note">record + send</div></div>
+    <div class="stat"><div class="stat-label">At 8 reviews/mo</div><div class="stat-val green">$1,600–2,400</div><div class="stat-note">monthly income</div></div>
+    <div class="stat"><div class="stat-label">Hours/week</div><div class="stat-val blue">3–5 hrs</div><div class="stat-note">fully async</div></div>
+  </div>
+  <div class="how-label">How it works</div>
+  <div class="how-steps">
+    <div class="step"><div class="step-num blue">1</div>Simple landing page — "Submit your deal"</div>
+    <div class="step"><div class="step-num blue">2</div>Stripe payment + intake form</div>
+    <div class="step"><div class="step-num blue">3</div>Record Loom review, email back</div>
+    <div class="step"><div class="step-num blue">4</div>Done. Next deal.</div>
+  </div>
+</div>
+
+<div class="idea-card wes-card">
+  <div class="idea-name">The Private Lender Newsletter</div>
+  <div class="idea-tagline">Paid Substack · Build while you travel</div>
+  <div class="idea-desc">Real deal breakdowns, red flags, underwriting lessons — written once a week from wherever you are. Your community already exists. This monetizes the knowledge you're giving away for free right now. Starts slow, compounds fast.</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Subscription</div><div class="stat-val blue">$25–50/mo</div><div class="stat-note">per subscriber</div></div>
+    <div class="stat"><div class="stat-label">At 100 subs</div><div class="stat-val blue">$2,500–5,000</div><div class="stat-note">per month</div></div>
+    <div class="stat"><div class="stat-label">Hours/week</div><div class="stat-val blue">2–3 hrs</div><div class="stat-note">one post/week</div></div>
+    <div class="stat"><div class="stat-label">Works from</div><div class="stat-val blue">Anywhere</div><div class="stat-note">fully remote</div></div>
+  </div>
+  <div class="how-label">Build order</div>
+  <div class="how-steps">
+    <div class="step"><div class="step-num blue">1</div>Start free on Substack — build list</div>
+    <div class="step"><div class="step-num blue">2</div>Go paid at 200+ subscribers</div>
+    <div class="step"><div class="step-num blue">3</div>Upsell deal review to subscribers</div>
+  </div>
+</div>
+
+<!-- SARA -->
+<div class="cat-header">
+  <span class="cat-label sara">Sara — Contracts Attorney</span>
+  <div class="cat-line"></div>
+</div>
+
+<div class="idea-card sara-card highlight">
+  <div class="best-tag">Best fit</div>
+  <div class="idea-name">Fractional Contract Counsel</div>
+  <div class="idea-tagline">2–3 clients · Async only · No calls required</div>
+  <div class="idea-desc">Small and mid-size companies — especially in healthcare — constantly need contract review but can't afford a full-time attorney. Sara takes 2–3 clients on monthly retainer. They submit contracts, she reviews and redlines asynchronously, returns via email and document markup. No calls. No court. No people. Just contracts, which she already does all day. Wes handles any communication needed.</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Per client/mo</div><div class="stat-val purple">$1,500–3,000</div><div class="stat-note">monthly retainer</div></div>
+    <div class="stat"><div class="stat-label">At 2 clients</div><div class="stat-val green">$3,000–6,000</div><div class="stat-note">per month extra</div></div>
+    <div class="stat"><div class="stat-label">Hours/week now</div><div class="stat-val purple">5–8 hrs</div><div class="stat-note">fits around CCAH</div></div>
+    <div class="stat"><div class="stat-label">Customer-facing?</div><div class="stat-val purple">No</div><div class="stat-note">email + docs only</div></div>
+  </div>
+  <div class="how-label">Why healthcare contracts specifically</div>
+  <div class="how-steps">
+    <div class="step"><div class="step-num purple">1</div>Managed care nuance is rare — commands premium</div>
+    <div class="step"><div class="step-num purple">2</div>Healthcare vendors pay $200–400/hr for this</div>
+    <div class="step"><div class="step-num purple">3</div>Wes handles any client-facing communication</div>
+    <div class="step"><div class="step-num purple">4</div>Same workflow in Europe as Cave Creek</div>
+  </div>
+</div>
+
+<div class="idea-card sara-card">
+  <div class="idea-name">Contract Template Library</div>
+  <div class="idea-tagline">Build once · Sell forever · Zero ongoing time</div>
+  <div class="idea-desc">Sara drafts a library of healthcare vendor contract templates — NDAs, MSAs, SOWs, BAAs — sold on Gumroad for $75–250 each. She builds them once. Wes handles any marketing. After that it generates income passively with no ongoing hours at all.</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Per template</div><div class="stat-val purple">$75–250</div><div class="stat-note">one-time sale</div></div>
+    <div class="stat"><div class="stat-label">Steady state</div><div class="stat-val purple">$500–2,000</div><div class="stat-note">per month passive</div></div>
+    <div class="stat"><div class="stat-label">Build time</div><div class="stat-val purple">10–15 hrs</div><div class="stat-note">total, once</div></div>
+    <div class="stat"><div class="stat-label">Ongoing hours</div><div class="stat-val purple">~0</div><div class="stat-note">fully passive</div></div>
+  </div>
+  <div class="how-label">Best starting templates</div>
+  <div class="how-steps">
+    <div class="step"><div class="step-num purple">1</div>Healthcare vendor NDA</div>
+    <div class="step"><div class="step-num purple">2</div>MSA for managed care vendors</div>
+    <div class="step"><div class="step-num purple">3</div>BAA (HIPAA business associate)</div>
+    <div class="step"><div class="step-num purple">4</div>SOW + change order template</div>
+  </div>
+</div>
+
+<!-- COMBINED -->
+<div class="cat-header">
+  <span class="cat-label both">Combined picture</span>
+  <div class="cat-line"></div>
+</div>
+
+<div class="summary-card">
+  <div class="summary-title">What this looks like in practice</div>
+  <div class="summary-grid">
+    <div class="sum-block">
+      <div class="sum-block-label">Wes · Deal reviews now</div>
+      <div class="sum-block-name">8 reviews/mo at $200</div>
+      <div class="sum-block-val blue">$1,600/mo</div>
+      <div class="sum-block-note">3–5 hrs/week · fully async</div>
+    </div>
+    <div class="sum-block">
+      <div class="sum-block-label">Wes · Newsletter (6mo in)</div>
+      <div class="sum-block-name">100 subscribers at $30/mo</div>
+      <div class="sum-block-val blue">$3,000/mo</div>
+      <div class="sum-block-note">2–3 hrs/week · compounds</div>
+    </div>
+    <div class="sum-block">
+      <div class="sum-block-label">Sara · 2 async retainer clients</div>
+      <div class="sum-block-name">Healthcare contract counsel</div>
+      <div class="sum-block-val purple">$3,000–6,000/mo</div>
+      <div class="sum-block-note">5–8 hrs/week · no calls</div>
+    </div>
+    <div class="sum-block">
+      <div class="sum-block-label">Sara · Template library</div>
+      <div class="sum-block-name">Built once, passive forever</div>
+      <div class="sum-block-val purple">$500–2,000/mo</div>
+      <div class="sum-block-note">~0 hrs/week ongoing</div>
+    </div>
+  </div>
+  <div class="total-row">
+    <div>
+      <div class="total-label">Combined extra income potential</div>
+      <div class="total-note">Neither of you working more than 10 hrs/week total. Fully remote. Runs from Europe just as well as Cave Creek.</div>
+    </div>
+    <div class="total-val">$5–10K/mo</div>
+  </div>
+</div>
+
+<div class="footnote">None of this requires quitting anything or starting immediately. The simplest first step: Wes puts up a one-page deal review offer this week — $200, submit via form, 48hr turnaround. Sara keeps her options open until the Europe plan is clearer. The fractional counsel work can be picked up anytime. The goal is not to hustle harder. It is to have options.</div>
+
+</body>
+</html>
